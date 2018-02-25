@@ -24,6 +24,7 @@ public class Ventana extends javax.swing.JFrame {
     boolean p1;
 
     public Ventana() throws IOException {
+        //comentario de modificacion
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
      

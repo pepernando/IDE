@@ -5,13 +5,22 @@
  */
 package ide;
 
+import java.awt.Color;
+import java.awt.ComponentOrientation;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  *
@@ -163,7 +172,41 @@ public class Ventana extends javax.swing.JFrame {
         if(returnVal == JFileChooser.APPROVE_OPTION) {
            System.out.println("You chose to open this file: " +
                 chooser.getSelectedFile().getName());
+           
+                File archivo = null;
+                FileReader fr = null;
+                BufferedReader br = null;
+
+                try {
+                   // Apertura del fichero y creacion de BufferedReader para poder
+                   // hacer una lectura comoda (disponer del metodo readLine()).
+                   archivo = new File (chooser.getSelectedFile().getAbsolutePath());
+                   fr = new FileReader (archivo);
+                   br = new BufferedReader(fr);
+
+                   // Lectura del fichero
+                   String linea;
+                   
+                    while((linea=br.readLine())!=null){
+                        System.out.println(linea);
+                        jTextPane1.setText(jTextPane1.getText() + linea + "\n");
+                    }
+                }catch(Exception e){
+                }finally{
+                   // En el finally cerramos el fichero, para asegurarnos
+                   // que se cierra tanto si todo va bien como si salta 
+                   // una excepcion.
+                   try{                    
+                      if( null != fr ){   
+                         fr.close();     
+                      }                  
+                   }catch (Exception e2){ 
+                   }
+                }
+                
         }
+        
+        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed

@@ -390,6 +390,7 @@ public class Ventana extends javax.swing.JFrame {
                     guardarComo();
                 }else{
                     guardar();
+                    ruta="";
                 }
                 
                 System.out.println(ruta);

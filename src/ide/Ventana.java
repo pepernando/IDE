@@ -153,7 +153,7 @@ public class Ventana extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Condigo Intermedio", jScrollPane6);
 
-        jMenu1.setText("File");
+        jMenu1.setText("Archivo");
 
         jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/new.png"))); // NOI18N
@@ -187,6 +187,11 @@ public class Ventana extends javax.swing.JFrame {
         jMenu1.add(jMenuItem3);
 
         jMenuItem4.setText("Guerdar como...");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem4);
         jMenu1.add(jSeparator2);
 
@@ -201,7 +206,7 @@ public class Ventana extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("Editar");
 
         jMenuItem5.setText("Ocultar");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
@@ -219,12 +224,16 @@ public class Ventana extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE))
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jTabbedPane1)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -267,6 +276,8 @@ public class Ventana extends javax.swing.JFrame {
                    fr = new FileReader (archivo);
                    br = new BufferedReader(fr);
                    ruta = chooser.getSelectedFile().getAbsolutePath();
+                   
+                   jTextPane1.setText("");
                    
                    // Lectura del fichero
                    String linea;
@@ -321,7 +332,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextPane1KeyPressed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        if(ruta!=""){
+        if(!"".equals(ruta)){
             try {
                 File file = new File(ruta);
 
@@ -332,20 +343,16 @@ public class Ventana extends javax.swing.JFrame {
                         System.out.println("Delete operation is failed.");
                 }
 
-                 file = new File(ruta);
-                 /*If file gets created then the createNewFile() 
-                  * method would return true or if the file is 
-                  * already present it would return false
-                  */
-
+                
+                /*file = new File(ruta);
+                
                  boolean fvar = file.createNewFile();
                  if (fvar){
                       System.out.println("File has been created successfully");
                  }
                  else{
                       System.out.println("File already present at the specified location");
-                }
-
+                }*/
 
 
                 // creates the file
@@ -359,27 +366,14 @@ public class Ventana extends javax.swing.JFrame {
                 writer.flush();
                 writer.close();
 
-          // Creates a FileReader Object
-
-          /*FileReader fr = new FileReader(file); 
-                char [] a = new char[50];
-                fr.read(a);   // reads the content to the array
-          ```   
-                fr.close();
-                */
-                //JTextPane p = yourJTextPane;
-                //System.out.println(p.getText().split("\n").length);
-                //Este sirve para partir el texto en multilineas
-
             }catch (IOException e) {
 
             }
         }else{
-            int dialogButton = JOptionPane.YES_NO_OPTION;
-            JOptionPane.showConfirmDialog (null, "El archivo no existe \n desea guardarlo?","Advertencia", dialogButton);
-            
-            if(dialogButton == JOptionPane.YES_OPTION) {
-                
+            if (JOptionPane.showConfirmDialog(null, "El Archivo no a sido" + 
+                    " creado\nDesea Crearlo?", "Advertencia",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                // yes option
                 JFileChooser chooser = new JFileChooser();
                 
                 int returnVal = chooser.showOpenDialog(chooser);
@@ -387,16 +381,47 @@ public class Ventana extends javax.swing.JFrame {
                 ruta = chooser.getSelectedFile().getAbsolutePath();
                 
                 System.out.println(ruta);
-        
-                //System.exit(0);
-            if(dialogButton == JOptionPane.NO_OPTION) {
-                  
-                  jTextPane1.setText("");
-                  remove(dialogButton);
-                }
-              }
+            } else {
+                // no option
+                jTextPane1.setText("");
+            }
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        try {
+            
+                JFileChooser chooser = new JFileChooser();
+                
+                int returnVal = chooser.showOpenDialog(chooser);
+                
+                ruta = chooser.getSelectedFile().getAbsolutePath();
+                
+                File file = new File(ruta);
+
+                //Seborra el archivo para no sobrescribirlo
+                if(file.delete()){
+                        System.out.println(file.getName() + " is deleted!");
+                    }else{
+                        System.out.println("Delete operation is failed.");
+                }
+                
+                
+
+                file.createNewFile();
+
+                // creates a FileWriter Object
+                FileWriter writer = new FileWriter(file); 
+
+          // Writes the content to the file
+                writer.write(jTextPane1.getText()); 
+                writer.flush();
+                writer.close();
+
+            }catch (IOException e) {
+
+            }
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments

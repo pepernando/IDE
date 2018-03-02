@@ -73,6 +73,7 @@ public class Ventana extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
@@ -170,6 +171,11 @@ public class Ventana extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
         jMenu1.add(jSeparator1);
 
+        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/close.png"))); // NOI18N
+        jMenuItem7.setText("Cerrar");
+        jMenu1.add(jMenuItem7);
+
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/save.png"))); // NOI18N
         jMenuItem3.setText("Guardar");
@@ -184,6 +190,7 @@ public class Ventana extends javax.swing.JFrame {
         jMenu1.add(jMenuItem4);
         jMenu1.add(jSeparator2);
 
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/exit.png"))); // NOI18N
         jMenuItem2.setText("Salir");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -370,9 +377,21 @@ public class Ventana extends javax.swing.JFrame {
         }else{
             int dialogButton = JOptionPane.YES_NO_OPTION;
             JOptionPane.showConfirmDialog (null, "El archivo no existe \n desea guardarlo?","Advertencia", dialogButton);
+            
             if(dialogButton == JOptionPane.YES_OPTION) {
-                System.exit(0);
+                
+                JFileChooser chooser = new JFileChooser();
+                
+                int returnVal = chooser.showOpenDialog(chooser);
+                
+                ruta = chooser.getSelectedFile().getAbsolutePath();
+                
+                System.out.println(ruta);
+        
+                //System.exit(0);
             if(dialogButton == JOptionPane.NO_OPTION) {
+                  
+                  jTextPane1.setText("");
                   remove(dialogButton);
                 }
               }
@@ -429,6 +448,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

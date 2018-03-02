@@ -5,6 +5,7 @@
  */
 package ide;
 
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -68,6 +69,10 @@ public class Ventana extends javax.swing.JFrame {
         jTextArea4 = new javax.swing.JTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea5 = new javax.swing.JTextArea();
+        jToolBar2 = new javax.swing.JToolBar();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -153,11 +158,51 @@ public class Ventana extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Condigo Intermedio", jScrollPane6);
 
+        jToolBar2.setRollover(true);
+
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/open.png"))); // NOI18N
+        jButton4.setFocusable(false);
+        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(jButton4);
+
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/new.png"))); // NOI18N
+        jButton5.setFocusable(false);
+        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(jButton5);
+
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/save.png"))); // NOI18N
+        jButton6.setFocusable(false);
+        jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(jButton6);
+
         jMenu1.setText("Archivo");
 
         jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/new.png"))); // NOI18N
         jMenuItem6.setText("Nuevo");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem6);
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
@@ -174,6 +219,11 @@ public class Ventana extends javax.swing.JFrame {
         jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/close.png"))); // NOI18N
         jMenuItem7.setText("Cerrar");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem7);
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
@@ -226,10 +276,14 @@ public class Ventana extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -238,7 +292,9 @@ public class Ventana extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
@@ -254,53 +310,7 @@ public class Ventana extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         System.out.println("Este Boton Funciona");
         
-        JFileChooser chooser = new JFileChooser();
-        /*FileNameExtensionFilter filter = new FileNameExtensionFilter(
-            "Archivos Ruby", "rb");
-        chooser.setFileFilter(filter);*/
-        
-        int returnVal = chooser.showOpenDialog(chooser);
-        
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-           System.out.println("You chose to open this file: " +
-                chooser.getSelectedFile().getName());
-           
-                File archivo = null;
-                FileReader fr = null;
-                BufferedReader br = null;
-
-                try {
-                   // Apertura del fichero y creacion de BufferedReader para poder
-                   // hacer una lectura comoda (disponer del metodo readLine()).
-                   archivo = new File (chooser.getSelectedFile().getAbsolutePath());
-                   fr = new FileReader (archivo);
-                   br = new BufferedReader(fr);
-                   ruta = chooser.getSelectedFile().getAbsolutePath();
-                   
-                   jTextPane1.setText("");
-                   
-                   // Lectura del fichero
-                   String linea;
-                   
-                    while((linea=br.readLine())!=null){
-                        //System.out.println(linea);
-                        jTextPane1.setText(jTextPane1.getText() + linea + "\n");
-                    }
-                }catch(Exception e){
-                }finally{
-                   // En el finally cerramos el fichero, para asegurarnos
-                   // que se cierra tanto si todo va bien como si salta 
-                   // una excepcion.
-                   try{                    
-                      if( null != fr ){   
-                         fr.close();     
-                      }                  
-                   }catch (Exception e2){ 
-                   }
-                }
-                
-        }
-        
+        abrir();
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -320,7 +330,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
@@ -332,96 +342,76 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextPane1KeyPressed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        if(!"".equals(ruta)){
-            try {
-                File file = new File(ruta);
-
-                //Seborra el archivo para no sobrescribirlo
-                if(file.delete()){
-                        System.out.println(file.getName() + " is deleted!");
-                    }else{
-                        System.out.println("Delete operation is failed.");
-                }
-
-                
-                /*file = new File(ruta);
-                
-                 boolean fvar = file.createNewFile();
-                 if (fvar){
-                      System.out.println("File has been created successfully");
-                 }
-                 else{
-                      System.out.println("File already present at the specified location");
-                }*/
-
-
-                // creates the file
-                file.createNewFile();
-
-                // creates a FileWriter Object
-                FileWriter writer = new FileWriter(file); 
-
-          // Writes the content to the file
-                writer.write(jTextPane1.getText()); 
-                writer.flush();
-                writer.close();
-
-            }catch (IOException e) {
-
-            }
-        }else{
-            if (JOptionPane.showConfirmDialog(null, "El Archivo no a sido" + 
-                    " creado\nDesea Crearlo?", "Advertencia",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                // yes option
-                JFileChooser chooser = new JFileChooser();
-                
-                int returnVal = chooser.showOpenDialog(chooser);
-                
-                ruta = chooser.getSelectedFile().getAbsolutePath();
-                
-                System.out.println(ruta);
-            } else {
-                // no option
-                jTextPane1.setText("");
-            }
-        }
+        guardar();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        try {
-            
-                JFileChooser chooser = new JFileChooser();
+        guardarComo();
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        jTextPane1.setText("");
+        ruta="";
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        if (JOptionPane.showConfirmDialog(null, "Desea Guardarlo antes?", "Advertencia",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                // yes option
+                /*JFileChooser chooser = new JFileChooser();
                 
-                int returnVal = chooser.showOpenDialog(chooser);
+                int returnVal = chooser.showSaveDialog(chooser);
                 
                 ruta = chooser.getSelectedFile().getAbsolutePath();
-                
-                File file = new File(ruta);
-
-                //Seborra el archivo para no sobrescribirlo
-                if(file.delete()){
-                        System.out.println(file.getName() + " is deleted!");
-                    }else{
-                        System.out.println("Delete operation is failed.");
+                */
+                if(ruta.equals("")){
+                    guardarComo();
+                }else{
+                    guardar();
                 }
                 
+                System.out.println(ruta);
+            }   // no option
+            jTextPane1.setText("");
+            
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        if (JOptionPane.showConfirmDialog(null, "Desea Guardarlo antes?", "Advertencia",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                // yes option
+                /*JFileChooser chooser = new JFileChooser();
                 
+                int returnVal = chooser.showSaveDialog(chooser);
+                
+                ruta = chooser.getSelectedFile().getAbsolutePath();
+                */
+                if(ruta.equals("")){
+                    guardarComo();
+                }else{
+                    guardar();
+                }
+                
+                System.out.println(ruta);
+            }   // no option
+            jTextPane1.setText("");
+            
+    }//GEN-LAST:event_jButton5ActionPerformed
 
-                file.createNewFile();
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        
+        if(ruta.equals("")){
+            guardarComo();
+        }else{
+            guardar();
+        }
+        // no option
+            
+    }//GEN-LAST:event_jButton6ActionPerformed
 
-                // creates a FileWriter Object
-                FileWriter writer = new FileWriter(file); 
-
-          // Writes the content to the file
-                writer.write(jTextPane1.getText()); 
-                writer.flush();
-                writer.close();
-
-            }catch (IOException e) {
-
-            }
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        abrir();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -459,11 +449,147 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
     }
+   
+    void guardarComo(){
+        try {
+            
+                JFileChooser chooser = new JFileChooser();
+                
+                int returnVal = chooser.showSaveDialog(chooser);
+                
+                ruta = chooser.getSelectedFile().getAbsolutePath();
+                
+                File file = new File(ruta);
 
+                //Seborra el archivo para no sobrescribirlo
+                /*if(file.delete()){
+                        System.out.println(file.getName() + " is deleted!");
+                    }else{
+                        System.out.println("Delete operation is failed.");
+                }*/
+                
+                
+
+                file.createNewFile();
+
+                // creates a FileWriter Object
+                FileWriter writer = new FileWriter(file); 
+
+          // Writes the content to the file
+                writer.write(jTextPane1.getText()); 
+                writer.flush();
+                writer.close();
+
+            }catch (IOException e) {
+
+            }
+    }
+    
+    void guardar(){
+        if(!"".equals(ruta)){
+            try {
+                File file = new File(ruta);
+
+                //Seborra el archivo para no sobrescribirlo
+                if(file.delete()){
+                        System.out.println(file.getName() + " is deleted!");
+                    }else{
+                        System.out.println("Delete operation is failed.");
+                }
+
+                file.createNewFile();
+
+                // Writes the content to the file
+                try ( // creates a FileWriter Object
+                        FileWriter writer = new FileWriter(file)) {
+                    // Writes the content to the file
+                    writer.write(jTextPane1.getText());
+                    writer.flush();
+                }
+
+            }catch (IOException e) {
+
+            }
+        }else{
+            if (JOptionPane.showConfirmDialog(null, "El Archivo no a sido" + 
+                    " creado\nDesea Crearlo?", "Advertencia",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                // yes option
+                /*JFileChooser chooser = new JFileChooser();
+                
+                int returnVal = chooser.showSaveDialog(chooser);
+                
+                ruta = chooser.getSelectedFile().getAbsolutePath();
+                */
+                guardarComo();
+                
+                System.out.println(ruta);
+            } else {
+                // no option
+                jTextPane1.setText("");
+            }
+            
+            
+        }
+    }
+    
+    void abrir(){
+        JFileChooser chooser = new JFileChooser();
+        /*FileNameExtensionFilter filter = new FileNameExtensionFilter(
+            "Archivos Ruby", "rb");
+        chooser.setFileFilter(filter);*/
+        
+        int returnVal = chooser.showOpenDialog(chooser);
+        
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+           System.out.println("You chose to open this file: " +
+        chooser.getSelectedFile().getName());
+
+        File archivo = null;
+        FileReader fr = null;
+        BufferedReader br = null;
+
+        try {
+           // Apertura del fichero y creacion de BufferedReader para poder
+           // hacer una lectura comoda (disponer del metodo readLine()).
+           archivo = new File (chooser.getSelectedFile().getAbsolutePath());
+           fr = new FileReader (archivo);
+           br = new BufferedReader(fr);
+           ruta = chooser.getSelectedFile().getAbsolutePath();
+
+           jTextPane1.setText("");
+
+           // Lectura del fichero
+           String linea;
+
+            while((linea=br.readLine())!=null){
+                //System.out.println(linea);
+                jTextPane1.setText(jTextPane1.getText() + linea + "\n");
+            }
+        }catch(Exception e){
+        }finally{
+           // En el finally cerramos el fichero, para asegurarnos
+           // que se cierra tanto si todo va bien como si salta 
+           // una excepcion.
+           try{                    
+              if( null != fr ){   
+                 fr.close();     
+              }                  
+           }catch (Exception e2){ 
+           }
+        }
+                
+        }
+        
+    }
+            
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -493,5 +619,6 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar jToolBar2;
     // End of variables declaration//GEN-END:variables
 }

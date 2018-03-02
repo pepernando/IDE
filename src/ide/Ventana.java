@@ -8,12 +8,12 @@ package ide;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -88,9 +88,11 @@ public class Ventana extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
+        jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem6.setText("Nuevo");
         jMenu1.add(jMenuItem6);
 
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem1.setText("Abrir");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,6 +102,7 @@ public class Ventana extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
         jMenu1.add(jSeparator1);
 
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setText("Guardar");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,8 +147,8 @@ public class Ventana extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 768, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 892, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 9, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -164,9 +167,9 @@ public class Ventana extends javax.swing.JFrame {
         System.out.println("Este Boton Funciona");
         
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+        /*FileNameExtensionFilter filter = new FileNameExtensionFilter(
             "Archivos Ruby", "rb");
-        chooser.setFileFilter(filter);
+        chooser.setFileFilter(filter);*/
         
         int returnVal = chooser.showOpenDialog(chooser);
         
@@ -190,7 +193,7 @@ public class Ventana extends javax.swing.JFrame {
                    String linea;
                    
                     while((linea=br.readLine())!=null){
-                        System.out.println(linea);
+                        //System.out.println(linea);
                         jTextPane1.setText(jTextPane1.getText() + linea + "\n");
                     }
                 }catch(Exception e){
@@ -239,6 +242,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextPane1KeyPressed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        
         try {
             File file = new File(ruta);
             
@@ -254,19 +258,42 @@ public class Ventana extends javax.swing.JFrame {
 	      * method would return true or if the file is 
 	      * already present it would return false
 	      */
+             
              boolean fvar = file.createNewFile();
 	     if (fvar){
 	          System.out.println("File has been created successfully");
 	     }
 	     else{
 	          System.out.println("File already present at the specified location");
-	     }
-             
+            }
+            
+            
+      
+            // creates the file
+            file.createNewFile();
+      
+            // creates a FileWriter Object
+            FileWriter writer = new FileWriter(file); 
+      
+      // Writes the content to the file
+            writer.write(jTextPane1.getText()); 
+            writer.flush();
+            writer.close();
+
+      // Creates a FileReader Object
+            
+      /*FileReader fr = new FileReader(file); 
+            char [] a = new char[50];
+            fr.read(a);   // reads the content to the array
+      ```   
+            fr.close();
+            */
             //JTextPane p = yourJTextPane;
             //System.out.println(p.getText().split("\n").length);
             //Este sirve para partir el texto en multilineas
+            
         }catch (IOException e) {
-            //exception handling left as an exercise for the reader
+            
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 

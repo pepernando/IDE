@@ -16,6 +16,9 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.Utilities;
 
 /**
  *
@@ -24,8 +27,8 @@ import javax.swing.JOptionPane;
 public class Ventana extends javax.swing.JFrame {
 
     
-    TextLineNumber tln;
-    boolean p1;
+    TextLineNumber tln,tln2;
+    boolean p1,b2;
     String ruta;
 
     public Ventana() throws IOException {
@@ -33,9 +36,15 @@ public class Ventana extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
      
-        tln = new TextLineNumber(jTextPane1);
-        jScrollPane2.setRowHeaderView(tln);
+        tln = new TextLineNumber(jTextAreaCode);
+        jScrollPane7.setRowHeaderView(tln);
+        //jScrollPane2.setColumnHeaderView(tln);
+        tln2 = new TextLineNumber(jTextArea1);
+        jScrollPane1.setRowHeaderView(tln2);
+        
+        
         p1 = true;
+        b2 = true;
         
         ruta="";
     }
@@ -52,8 +61,6 @@ public class Ventana extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -73,6 +80,9 @@ public class Ventana extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTextAreaCode = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -101,13 +111,6 @@ public class Ventana extends javax.swing.JFrame {
         jTabbedPane1.addTab("Errores", jTextField1);
         jTabbedPane1.addTab("Resultados", jTextField2);
 
-        jTextPane1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextPane1KeyPressed(evt);
-            }
-        });
-        jScrollPane2.setViewportView(jTextPane1);
-
         jToolBar1.setRollover(true);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/build.png"))); // NOI18N
@@ -126,6 +129,11 @@ public class Ventana extends javax.swing.JFrame {
         jButton3.setFocusable(false);
         jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButton3);
 
         jTextArea1.setColumns(20);
@@ -192,6 +200,17 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(jButton6);
+
+        jLabel1.setText("Linnea: 30 Columna: 58");
+
+        jTextAreaCode.setColumns(20);
+        jTextAreaCode.setRows(5);
+        jTextAreaCode.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                jTextAreaCodeCaretUpdate(evt);
+            }
+        });
+        jScrollPane7.setViewportView(jTextAreaCode);
 
         jMenu1.setText("Archivo");
 
@@ -277,17 +296,19 @@ public class Ventana extends javax.swing.JFrame {
             .addComponent(jTabbedPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 307, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -295,13 +316,17 @@ public class Ventana extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane7)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -337,10 +362,6 @@ public class Ventana extends javax.swing.JFrame {
         
     }//GEN-LAST:event_formKeyPressed
 
-    private void jTextPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPane1KeyPressed
-      
-    }//GEN-LAST:event_jTextPane1KeyPressed
-
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         guardar();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
@@ -350,7 +371,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        jTextPane1.setText("");
+        jTextAreaCode.setText("");
         ruta="";
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
@@ -372,7 +393,7 @@ public class Ventana extends javax.swing.JFrame {
                 
                 System.out.println(ruta);
             }   // no option
-            jTextPane1.setText("");
+            jTextAreaCode.setText("");
             
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
@@ -395,7 +416,7 @@ public class Ventana extends javax.swing.JFrame {
                 
                 System.out.println(ruta);
             }   // no option
-            jTextPane1.setText("");
+            jTextAreaCode.setText("");
             
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -413,6 +434,57 @@ public class Ventana extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         abrir();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        //Point point = jTextPane1.getCaret().getMagicCaretPosition();
+        /*int offset = jTextArea1.getCaretPosition();
+        int line = 0;
+        try {
+            line = jTextArea1.getLineOfOffset(offset);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //TextArea1.getLineOfOffset(offset);
+        System.out.printf("Offset %d on line %d%n", offset, line);
+        jLabel1.setText("Columna " + offset + "Linea" + line);
+        */
+        int pos = jTextArea1.getCaretPosition();
+            Element map = jTextArea1.getDocument().getDefaultRootElement();
+            int row = map.getElementIndex(pos)+1;
+            Element lineElem = map.getElement(row);
+            int col = pos - lineElem.getStartOffset();
+  
+            jLabel1.setText("Columna " + col + "Linea" + row);
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTextAreaCodeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextAreaCodeCaretUpdate
+        if(b2){
+            int caretPos = jTextArea1.getCaretPosition();
+            int rowNum = (caretPos == 0) ? 1 : 0;
+            for (int offset = caretPos; offset > 0;) {
+                try {
+                    offset = Utilities.getRowStart(jTextArea1, offset) - 1;
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                rowNum++;
+            }
+            //System.out.println("Row: " + rowNum);
+
+            int offset = 0;
+            try {
+                offset = Utilities.getRowStart(jTextArea1, caretPos);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int colNum = caretPos - offset + 1;
+            //System.out.println("Col: " + colNum);     
+            jLabel1.setText("Row " + rowNum + "Col " + colNum);
+  }
+  
+    }//GEN-LAST:event_jTextAreaCodeCaretUpdate
 
     /**
      * @param args the command line arguments
@@ -473,13 +545,13 @@ public class Ventana extends javax.swing.JFrame {
 
                 file.createNewFile();
 
-                // creates a FileWriter Object
-                FileWriter writer = new FileWriter(file); 
-
-          // Writes the content to the file
-                writer.write(jTextPane1.getText()); 
+            // Writes the content to the file
+            try ( // creates a FileWriter Object
+                    FileWriter writer = new FileWriter(file)) {
+                // Writes the content to the file
+                writer.write(jTextAreaCode.getText()); 
                 writer.flush();
-                writer.close();
+            }
 
             }catch (IOException e) {
 
@@ -504,7 +576,7 @@ public class Ventana extends javax.swing.JFrame {
                 try ( // creates a FileWriter Object
                         FileWriter writer = new FileWriter(file)) {
                     // Writes the content to the file
-                    writer.write(jTextPane1.getText());
+                    writer.write(jTextAreaCode.getText());
                     writer.flush();
                 }
 
@@ -527,7 +599,7 @@ public class Ventana extends javax.swing.JFrame {
                 System.out.println(ruta);
             } else {
                 // no option
-                jTextPane1.setText("");
+                jTextAreaCode.setText("");
             }
             
             
@@ -535,6 +607,7 @@ public class Ventana extends javax.swing.JFrame {
     }
     
     void abrir(){
+        b2=false;
         JFileChooser chooser = new JFileChooser();
         /*FileNameExtensionFilter filter = new FileNameExtensionFilter(
             "Archivos Ruby", "rb");
@@ -558,14 +631,16 @@ public class Ventana extends javax.swing.JFrame {
            br = new BufferedReader(fr);
            ruta = chooser.getSelectedFile().getAbsolutePath();
 
-           jTextPane1.setText("");
+           jTextAreaCode.setText("");
 
            // Lectura del fichero
            String linea;
 
             while((linea=br.readLine())!=null){
-                //System.out.println(linea);
-                jTextPane1.setText(jTextPane1.getText() + linea + "\n");
+                System.out.println(linea);
+                
+                jTextAreaCode.setText(jTextAreaCode.getText() + linea + "\n");
+                jTextArea1.setText(jTextArea1.getText() + linea + "\n");
             }
         }catch(Exception e){
         }finally{
@@ -581,6 +656,7 @@ public class Ventana extends javax.swing.JFrame {
         }
                 
         }
+        b2=true;
         
     }
             
@@ -591,6 +667,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -602,11 +679,11 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -616,9 +693,9 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea5;
+    private javax.swing.JTextArea jTextAreaCode;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     // End of variables declaration//GEN-END:variables

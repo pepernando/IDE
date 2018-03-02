@@ -35,7 +35,7 @@ public final class TextLineNumber extends JPanel
 
 	private final static Border OUTER = new MatteBorder(0, 0, 0, 2, Color.GRAY);
 
-	private final static int HEIGHT = Integer.MAX_VALUE - 1000000;
+	private final static int HEIGHTT = Integer.MAX_VALUE - 1000000;
 
 	//  Text component this TextTextLineNumber component is in sync with
 
@@ -229,7 +229,7 @@ public final class TextLineNumber extends JPanel
 			int preferredWidth = insets.left + insets.right + width;
 
 			Dimension d = getPreferredSize();
-			d.setSize(preferredWidth, HEIGHT);
+			d.setSize(preferredWidth, HEIGHTT);
 			setPreferredSize( d );
 			setSize( d );
 		}
@@ -290,10 +290,7 @@ public final class TextLineNumber extends JPanel
 		int caretPosition = component.getCaretPosition();
 		Element root = component.getDocument().getDefaultRootElement();
 
-		if (root.getElementIndex( rowStartOffset ) == root.getElementIndex(caretPosition))
-			return true;
-		else
-			return false;
+            return root.getElementIndex( rowStartOffset ) == root.getElementIndex(caretPosition);
 	}
 
 	/*

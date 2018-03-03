@@ -472,7 +472,7 @@ public class Ventana extends javax.swing.JFrame {
                 }
                 rowNum++;
             }
-             offset = 0;        
+            offset = 0;        
             try {
                 offset = Utilities.getRowStart(jTextAreaCode, caretPos);
             } catch (BadLocationException ex) {
@@ -482,9 +482,10 @@ public class Ventana extends javax.swing.JFrame {
             
             colNum = caretPos - offset + 1;
             //System.out.println("Col: " + colNum);     
-            jLabel1.setText("Row " + rowNum + "Col " + colNum);
+            jLabel1.setText("Fila: " + rowNum + " Columna: " + colNum);
         }
         b2=true;
+        //jLabel1.setText("Linnea actual: " + tln.linenumberaux);
   
     }//GEN-LAST:event_jTextAreaCodeCaretUpdate
 

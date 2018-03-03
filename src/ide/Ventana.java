@@ -29,7 +29,7 @@ public class Ventana extends javax.swing.JFrame {
     
     TextLineNumber tln,tln2;
     boolean p1,b2;
-    int caretPos,rowNum,offset;
+    int caretPos,rowNum,offset,colNum;
     String ruta;
 
     public Ventana() throws IOException {
@@ -44,7 +44,7 @@ public class Ventana extends javax.swing.JFrame {
         p1 = true;
         b2 = true;
         
-        caretPos = rowNum = offset =0;
+        caretPos = rowNum = offset = colNum=0;
         
         ruta="";
     }
@@ -461,27 +461,26 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jTextAreaCodeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextAreaCodeCaretUpdate
         if(b2){
-            int caretPos,rowNum,offset;
-            
             caretPos = jTextAreaCode.getCaretPosition();
             rowNum = (caretPos == 0) ? 1 : 0;
             for ( offset = caretPos; offset > 0;) {
                 try {
                     offset = Utilities.getRowStart(jTextAreaCode, offset) - 1;
+                    
                 } catch (BadLocationException ex) {
-                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 rowNum++;
             }
-            //System.out.println("Row: " + rowNum);
-
-            offset = 0;
+             offset = 0;        
             try {
                 offset = Utilities.getRowStart(jTextAreaCode, caretPos);
             } catch (BadLocationException ex) {
-                Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
             }
-            int colNum = caretPos - offset + 1;
+            
+            
+            colNum = caretPos - offset + 1;
             //System.out.println("Col: " + colNum);     
             jLabel1.setText("Row " + rowNum + "Col " + colNum);
         }

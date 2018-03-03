@@ -36,7 +36,7 @@ public class Ventana extends javax.swing.JFrame {
         //comentario de modificacion
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-     
+        //comentario
         tln = new TextLineNumber(jTextAreaCode);
         jScrollPane7.setRowHeaderView(tln);
         //jScrollPane2.setColumnHeaderView(tln);

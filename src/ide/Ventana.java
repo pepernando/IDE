@@ -29,6 +29,7 @@ public class Ventana extends javax.swing.JFrame {
     
     TextLineNumber tln,tln2;
     boolean p1,b2;
+    int caretPos,rowNum,offset;
     String ruta;
 
     public Ventana() throws IOException {
@@ -39,12 +40,11 @@ public class Ventana extends javax.swing.JFrame {
         tln = new TextLineNumber(jTextAreaCode);
         jScrollPane7.setRowHeaderView(tln);
         //jScrollPane2.setColumnHeaderView(tln);
-        tln2 = new TextLineNumber(jTextArea1);
-        jScrollPane1.setRowHeaderView(tln2);
-        
         
         p1 = true;
         b2 = true;
+        
+        caretPos = rowNum = offset =0;
         
         ruta="";
     }
@@ -461,11 +461,13 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jTextAreaCodeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextAreaCodeCaretUpdate
         if(b2){
-            int caretPos = jTextArea1.getCaretPosition();
-            int rowNum = (caretPos == 0) ? 1 : 0;
-            for (int offset = caretPos; offset > 0;) {
+            int caretPos,rowNum,offset;
+            
+            caretPos = jTextAreaCode.getCaretPosition();
+            rowNum = (caretPos == 0) ? 1 : 0;
+            for ( offset = caretPos; offset > 0;) {
                 try {
-                    offset = Utilities.getRowStart(jTextArea1, offset) - 1;
+                    offset = Utilities.getRowStart(jTextAreaCode, offset) - 1;
                 } catch (BadLocationException ex) {
                     Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -473,16 +475,17 @@ public class Ventana extends javax.swing.JFrame {
             }
             //System.out.println("Row: " + rowNum);
 
-            int offset = 0;
+            offset = 0;
             try {
-                offset = Utilities.getRowStart(jTextArea1, caretPos);
+                offset = Utilities.getRowStart(jTextAreaCode, caretPos);
             } catch (BadLocationException ex) {
                 Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
             }
             int colNum = caretPos - offset + 1;
             //System.out.println("Col: " + colNum);     
             jLabel1.setText("Row " + rowNum + "Col " + colNum);
-  }
+        }
+        b2=true;
   
     }//GEN-LAST:event_jTextAreaCodeCaretUpdate
 
@@ -637,10 +640,10 @@ public class Ventana extends javax.swing.JFrame {
            String linea;
 
             while((linea=br.readLine())!=null){
-                System.out.println(linea);
+                //System.out.println(linea);
                 
                 jTextAreaCode.setText(jTextAreaCode.getText() + linea + "\n");
-                jTextArea1.setText(jTextArea1.getText() + linea + "\n");
+                //jTextArea1.setText(jTextArea1.getText() + linea + "\n");
             }
         }catch(Exception e){
         }finally{

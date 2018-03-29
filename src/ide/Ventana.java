@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.text.Element;
 
 /**
  *
@@ -404,13 +403,6 @@ public class Ventana extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Desea Guardarlo antes?", "Advertencia",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                // yes option
-                /*JFileChooser chooser = new JFileChooser();
-                
-                int returnVal = chooser.showSaveDialog(chooser);
-                
-                ruta = chooser.getSelectedFile().getAbsolutePath();
-                */
                 if(ruta.equals("")){
                     guardarComo();
                 }else{
@@ -440,26 +432,6 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        //Point point = jTextPane1.getCaret().getMagicCaretPosition();
-        /*int offset = jTextArea1.getCaretPosition();
-        int line = 0;
-        try {
-            line = jTextArea1.getLineOfOffset(offset);
-        } catch (BadLocationException ex) {
-            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        //TextArea1.getLineOfOffset(offset);
-        System.out.printf("Offset %d on line %d%n", offset, line);
-        jLabel1.setText("Columna " + offset + "Linea" + line);
-        */
-        int pos = jTextArea1.getCaretPosition();
-            Element map = jTextArea1.getDocument().getDefaultRootElement();
-            int row = map.getElementIndex(pos)+1;
-            Element lineElem = map.getElement(row);
-            int col = pos - lineElem.getStartOffset();
-  
-            jLabel1.setText("Columna " + col + "Linea" + row);
         
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -520,15 +492,6 @@ public class Ventana extends javax.swing.JFrame {
                 
                 File file = new File(ruta);
 
-                //Seborra el archivo para no sobrescribirlo
-                /*if(file.delete()){
-                        System.out.println(file.getName() + " is deleted!");
-                    }else{
-                        System.out.println("Delete operation is failed.");
-                }*/
-                
-                
-
                 file.createNewFile();
 
             // Writes the content to the file
@@ -573,13 +536,7 @@ public class Ventana extends javax.swing.JFrame {
             if (JOptionPane.showConfirmDialog(null, "El Archivo no a sido" + 
                     " creado\nDesea Crearlo?", "Advertencia",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                // yes option
-                /*JFileChooser chooser = new JFileChooser();
-                
-                int returnVal = chooser.showSaveDialog(chooser);
-                
-                ruta = chooser.getSelectedFile().getAbsolutePath();
-                */
+
                 guardarComo();
                 
                 System.out.println(ruta);
@@ -628,7 +585,7 @@ public class Ventana extends javax.swing.JFrame {
                 jTextAreaCode.setText(jTextAreaCode.getText() + linea + "\n");
                 //jTextArea1.setText(jTextArea1.getText() + linea + "\n");
             }
-        }catch(Exception e){
+        }catch(IOException e){
         }finally{
            // En el finally cerramos el fichero, para asegurarnos
            // que se cierra tanto si todo va bien como si salta 
@@ -637,7 +594,7 @@ public class Ventana extends javax.swing.JFrame {
               if( null != fr ){   
                  fr.close();     
               }                  
-           }catch (Exception e2){ 
+           }catch (IOException e2){ 
            }
         }
                 

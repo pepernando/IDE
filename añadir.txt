@@ -1,0 +1,25 @@
+ if(b2){
+            int caretPos = jTextArea1.getCaretPosition();
+            int rowNum = (caretPos == 0) ? 1 : 0;
+            for (int offset = caretPos; offset > 0;) {
+                try {
+                    offset = Utilities.getRowStart(jTextArea1, offset) - 1;
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                rowNum++;
+            }
+            //System.out.println("Row: " + rowNum);
+
+            int offset = 0;
+            try {
+                offset = Utilities.getRowStart(jTextArea1, caretPos);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int colNum = caretPos - offset + 1;
+            //System.out.println("Col: " + colNum);     
+            jLabel1.setText("Row " + rowNum + "Col " + colNum);
+  }
+  
+  y JTextPane por JtextArea

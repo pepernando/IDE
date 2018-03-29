@@ -16,9 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
-import javax.swing.text.Utilities;
 
 /**
  *
@@ -461,34 +459,11 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jTextAreaCodeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextAreaCodeCaretUpdate
         if(b2){
-            /*caretPos = jTextAreaCode.getCaretPosition();
-            rowNum = (caretPos == 0) ? 1 : 0;
-            for ( offset = caretPos; offset > 0;) {
-                try {
-                    offset = Utilities.getRowStart(jTextAreaCode, offset) - 1;
-                    
-                } catch (BadLocationException ex) {
-                    //Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                rowNum++;
-            }
-            offset = 0;        
-            try {
-                offset = Utilities.getRowStart(jTextAreaCode, caretPos);
-            } catch (BadLocationException ex) {
-                //Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            
-            colNum = caretPos - offset + 1;*/
-            //System.out.println("Col: " + colNum); 
             rowNum = tln.getPx();
             colNum = tln.getPy();
             jLabel1.setText("Fila: " + rowNum + " Columna: " + colNum);
         }
         b2=true;
-        //jLabel1.setText("Linnea actual: " + tln.linenumberaux);
-  
     }//GEN-LAST:event_jTextAreaCodeCaretUpdate
 
     /**

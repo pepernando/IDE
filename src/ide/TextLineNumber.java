@@ -380,16 +380,12 @@ public final class TextLineNumber extends JPanel
 //  Implement CaretListener interface
 //
 	@Override
-	public void caretUpdate(CaretEvent e)
-	{
+	public void caretUpdate(CaretEvent e){
 		//  Get the line the caret is positioned on
 
 		int caretPosition = component.getCaretPosition();
 		Element root = component.getDocument().getDefaultRootElement();
 		int currentLine = root.getElementIndex( caretPosition );
-                
-                //System.out.println("Linea: " + currentLine);
-                
                 
                 int offset = 0;
                 try {

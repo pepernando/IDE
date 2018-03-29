@@ -27,7 +27,7 @@ public class Ventana extends javax.swing.JFrame {
     
     TextLineNumber tln,tln2;
     boolean p1,b2;
-    int caretPos,rowNum,offset,colNum;
+    int rowNum,colNum;
     String ruta;
 
     public Ventana() throws IOException {
@@ -42,7 +42,7 @@ public class Ventana extends javax.swing.JFrame {
         p1 = true;
         b2 = true;
         
-        caretPos = rowNum = offset = colNum=0;
+        rowNum = colNum=0;
         
         ruta="";
     }

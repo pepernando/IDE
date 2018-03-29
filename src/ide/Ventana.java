@@ -112,18 +112,21 @@ public class Ventana extends javax.swing.JFrame {
         jToolBar1.setRollover(true);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/build.png"))); // NOI18N
+        jButton1.setToolTipText("Compilar");
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jButton1);
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/buildrun.png"))); // NOI18N
+        jButton2.setToolTipText("Compilar y Ejecutar");
         jButton2.setFocusable(false);
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jButton2);
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/run.png"))); // NOI18N
+        jButton3.setToolTipText("Ejecutar");
         jButton3.setFocusable(false);
         jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -167,6 +170,7 @@ public class Ventana extends javax.swing.JFrame {
         jToolBar2.setRollover(true);
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/open.png"))); // NOI18N
+        jButton4.setToolTipText("Abrir");
         jButton4.setFocusable(false);
         jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -178,6 +182,7 @@ public class Ventana extends javax.swing.JFrame {
         jToolBar2.add(jButton4);
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/new.png"))); // NOI18N
+        jButton5.setToolTipText("Nuevo");
         jButton5.setFocusable(false);
         jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -189,6 +194,7 @@ public class Ventana extends javax.swing.JFrame {
         jToolBar2.add(jButton5);
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/save.png"))); // NOI18N
+        jButton6.setToolTipText("Guardar");
         jButton6.setFocusable(false);
         jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

@@ -12,6 +12,8 @@ package ide;
 import java.awt.*;
 import java.beans.*;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -55,6 +57,8 @@ public final class TextLineNumber extends JPanel
     private int lastDigits;
     private int lastHeight;
     private int lastLine;
+    
+    private int px,py;
 
 	private HashMap<String, FontMetrics> fonts;
 
@@ -270,8 +274,10 @@ public final class TextLineNumber extends JPanel
     			String lineNumber = getTextLineNumber(rowStartOffset);
     			int stringWidth = fontMetrics.stringWidth( lineNumber );
     			int x = getOffsetX(availableWidth, stringWidth) + insets.left;
-				int y = getOffsetY(rowStartOffset, fontMetrics);
-    			g.drawString(lineNumber, x, y);
+                        int y = getOffsetY(rowStartOffset, fontMetrics);
+    			px = x;
+                        py = y;
+                        g.drawString(lineNumber, x, y);
 
     			//  Move to the next row
 
@@ -381,7 +387,22 @@ public final class TextLineNumber extends JPanel
 		int caretPosition = component.getCaretPosition();
 		Element root = component.getDocument().getDefaultRootElement();
 		int currentLine = root.getElementIndex( caretPosition );
-
+                
+                //System.out.println("Linea: " + currentLine);
+                
+                
+                int offset = 0;
+                try {
+                    offset = Utilities.getRowStart(component, caretPosition);
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(TextLineNumber.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                int colNum = caretPosition - offset + 1;
+                
+                px = currentLine+1;
+                py = colNum;
+          
 		//  Need to repaint so the correct line number can be highlighted
 
 		if (lastLine != currentLine)
@@ -459,4 +480,14 @@ public final class TextLineNumber extends JPanel
 			}
 		}
 	}
+
+    public int getPx() {
+        return px;
+    }
+
+    public int getPy() {
+        return py;
+    }
+        
+        
 }

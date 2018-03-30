@@ -551,6 +551,7 @@ public class Ventana extends javax.swing.JFrame {
     
     void abrir(){
         b2=false;
+        String cadaxuliar = "";
         JFileChooser chooser = new JFileChooser();
         /*FileNameExtensionFilter filter = new FileNameExtensionFilter(
             "Archivos Ruby", "rb");
@@ -582,9 +583,11 @@ public class Ventana extends javax.swing.JFrame {
             while((linea=br.readLine())!=null){
                 //System.out.println(linea);
                 
-                jTextAreaCode.setText(jTextAreaCode.getText() + linea + "\n");
+                //jTextAreaCode.setText(jTextAreaCode.getText() + linea + "\n");
+                cadaxuliar += linea + "\n";
                 //jTextArea1.setText(jTextArea1.getText() + linea + "\n");
             }
+            jTextAreaCode.setText(cadaxuliar);
         }catch(IOException e){
         }finally{
            // En el finally cerramos el fichero, para asegurarnos

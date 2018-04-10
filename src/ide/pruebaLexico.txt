@@ -1,0 +1,52 @@
+int vector, do y mas, res@tas, suma1, suma2, 25ert;//gatonono
+principal, si(cuando)si+34.34.34.34.34-34 +++--//gatusa
+cin>>>=<<<====!="micadena"-----+++++//gatomio
++-*/%<<=>>===!=:=(){}///*++--*//*/8:sadsad*/*/asd\n5454545646546,; "MiCadena"///
+main{peper
+main,if,then,else end,do, 
+while,repeat,until,read,write,float,integer,bool
+integer x,y,z;
+float a,b,c;
+x = 23;
+y = 2+3-1;
+z = y7;
+a = 24,4-1*3/234-1;
+if (2>3)
+        y=a%3;
+  mas
+      if(4>2)b=3,2;
+       mas
+           b=5,0;
+       terminar;
+       y=y+1;
+terminar;hacer
+y=(y+1)*21;
+while(y==5);
+repeat until(y==0){
+write x;
+read y,c,478.32.32
+};
+}
+gatito
+// Esto Es uN Comentario
+
+/*
+de
+*
+mas
+/          /
+
+des
+
+Una
++ + +
+****
+
+línea
+
+un
+*/
+gatito2
+
+if ya sí termino
+while//gatonino

@@ -36,8 +36,8 @@ public class Ventana extends javax.swing.JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("IDE");
         //comentario
-        tln = new TextLineNumber(jTextAreaCode);
-        jScrollPane7.setRowHeaderView(tln);
+        tln = new TextLineNumber(jTextPaneCode);
+        jScrollPane2.setRowHeaderView(tln);
         
         //jScrollPane2.setColumnHeaderView(tln);
         
@@ -81,8 +81,8 @@ public class Ventana extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        jTextAreaCode = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPaneCode = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -214,14 +214,12 @@ public class Ventana extends javax.swing.JFrame {
 
         jLabel1.setText("Linnea: 0 Columna: 0");
 
-        jTextAreaCode.setColumns(20);
-        jTextAreaCode.setRows(5);
-        jTextAreaCode.addCaretListener(new javax.swing.event.CaretListener() {
+        jTextPaneCode.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                jTextAreaCodeCaretUpdate(evt);
+                jTextPaneCodeCaretUpdate(evt);
             }
         });
-        jScrollPane7.setViewportView(jTextAreaCode);
+        jScrollPane2.setViewportView(jTextPaneCode);
 
         jMenu1.setText("Archivo");
 
@@ -305,17 +303,14 @@ public class Ventana extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 710, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 716, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel1))
@@ -328,8 +323,10 @@ public class Ventana extends javax.swing.JFrame {
                     .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE))
+                    .addComponent(jTabbedPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -378,7 +375,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        jTextAreaCode.setText("");
+        jTextPaneCode.setText("");
         ruta="";
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
@@ -400,7 +397,7 @@ public class Ventana extends javax.swing.JFrame {
                 
                 System.out.println(ruta);
             }   // no option
-            jTextAreaCode.setText("");
+            jTextPaneCode.setText("");
             
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
@@ -416,7 +413,7 @@ public class Ventana extends javax.swing.JFrame {
                 
                 System.out.println(ruta);
             }   // no option
-            jTextAreaCode.setText("");
+            jTextPaneCode.setText("");
             
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -439,42 +436,32 @@ public class Ventana extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jTextAreaCodeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextAreaCodeCaretUpdate
+    private void jButtonBuildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuildActionPerformed
+        Ejecutor ejecutor = new Ejecutor();
+        String cadaux ="";
+        guardar();
+        try{
+            Process p = ejecutor.comando("ruby src/ide/Lexico.rb " + ruta );
+            System.out.println("Salida comando:");
+            cadaux = ejecutor.leerBufer(ejecutor.salidaComando(p));
+            //System.out.println(cadaux);
+            /*System.out.println("Errores comando:");
+            System.out.println(ejecutor.leerBufer(ejecutor.errorComando(p)));*/
+        } catch(IOException e){
+            System.out.println("No se ejecuto correctamente por las sgtes razones: ");
+            System.exit(0);
+        }
+        jTextArea1.setText(cadaux);
+    }//GEN-LAST:event_jButtonBuildActionPerformed
+
+    private void jTextPaneCodeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextPaneCodeCaretUpdate
         if(b2){
             rowNum = tln.getPx();
             colNum = tln.getPy();
             jLabel1.setText("Fila: " + rowNum + " Columna: " + colNum);
         }
         b2=true;
-    }//GEN-LAST:event_jTextAreaCodeCaretUpdate
-
-    private void jButtonBuildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuildActionPerformed
-        jTextField2.setText(executeCommand("ruby Lexico.rb")); 
-        jTextArea1.setText(executeCommand("ruby Lexico.rb")); 
-        System.out.println("---------------------------");
-        System.out.println(executeCommand("ruby Lexico.rb"));
-        
-        String s;
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec("ruby Lexico.rb");
-            BufferedReader br = new BufferedReader(
-                new InputStreamReader(p.getInputStream()));
-            while ((s = br.readLine()) != null)
-                System.out.println("line: " + s);
-            p.waitFor();
-            System.out.println ("exit: " + p.exitValue());
-            p.destroy();
-        } catch (Exception e) {
-        }
-        
-        String[] execute = {"rb",  "Lexico.rb", "/home/peper/Escritorio/IDEGIT/IDE/src/ide/Lexico.rb"};
-        try {
-            Runtime.getRuntime().exec(execute);
-        } catch (IOException ex) {
-            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButtonBuildActionPerformed
+    }//GEN-LAST:event_jTextPaneCodeCaretUpdate
 
     /**
      * @param args the command line arguments
@@ -530,7 +517,7 @@ public class Ventana extends javax.swing.JFrame {
             try ( // creates a FileWriter Object
                     FileWriter writer = new FileWriter(file)) {
                 // Writes the content to the file
-                writer.write(jTextAreaCode.getText()); 
+                writer.write(jTextPaneCode.getText()); 
                 writer.flush();
             }
 
@@ -557,7 +544,7 @@ public class Ventana extends javax.swing.JFrame {
                 try ( // creates a FileWriter Object
                         FileWriter writer = new FileWriter(file)) {
                     // Writes the content to the file
-                    writer.write(jTextAreaCode.getText());
+                    writer.write(jTextPaneCode.getText());
                     writer.flush();
                 }
 
@@ -574,7 +561,7 @@ public class Ventana extends javax.swing.JFrame {
                 System.out.println(ruta);
             } else {
                 // no option
-                jTextAreaCode.setText("");
+                jTextPaneCode.setText("");
             }
             
             
@@ -607,7 +594,7 @@ public class Ventana extends javax.swing.JFrame {
            br = new BufferedReader(fr);
            ruta = chooser.getSelectedFile().getAbsolutePath();
 
-           jTextAreaCode.setText("");
+           jTextPaneCode.setText("");
 
            // Lectura del fichero
            String linea;
@@ -619,12 +606,10 @@ public class Ventana extends javax.swing.JFrame {
                 cadaxuliar += linea + "\n";
                 //jTextArea1.setText(jTextArea1.getText() + linea + "\n");
             }
-            jTextAreaCode.setText(cadaxuliar);
+            cadaxuliar=cadaxuliar.substring(0,cadaxuliar.length()-1);//para que no se agruegue el ultimo espacio
+            jTextPaneCode.setText(cadaxuliar);
         }catch(IOException e){
         }finally{
-           // En el finally cerramos el fichero, para asegurarnos
-           // que se cierra tanto si todo va bien como si salta 
-           // una excepcion.
            try{                    
               if( null != fr ){   
                  fr.close();     
@@ -677,11 +662,11 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -691,9 +676,9 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea5;
-    private javax.swing.JTextArea jTextAreaCode;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextPane jTextPaneCode;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     // End of variables declaration//GEN-END:variables

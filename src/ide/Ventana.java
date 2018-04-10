@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -24,7 +25,7 @@ import javax.swing.JOptionPane;
 public class Ventana extends javax.swing.JFrame {
 
     
-    TextLineNumber tln,tln2;
+    TextLineNumber tln;
     boolean p1,b2;
     int rowNum,colNum;
     String ruta;
@@ -33,9 +34,11 @@ public class Ventana extends javax.swing.JFrame {
         //comentario de modificacion
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("IDE");
         //comentario
         tln = new TextLineNumber(jTextAreaCode);
         jScrollPane7.setRowHeaderView(tln);
+        
         //jScrollPane2.setColumnHeaderView(tln);
         
         p1 = true;
@@ -59,12 +62,10 @@ public class Ventana extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
+        jButtonBuild = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jTabbedPane2 = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -73,6 +74,8 @@ public class Ventana extends javax.swing.JFrame {
         jTextArea4 = new javax.swing.JTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea5 = new javax.swing.JTextArea();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jToolBar2 = new javax.swing.JToolBar();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -110,12 +113,17 @@ public class Ventana extends javax.swing.JFrame {
 
         jToolBar1.setRollover(true);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/build.png"))); // NOI18N
-        jButton1.setToolTipText("Compilar");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton1);
+        jButtonBuild.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/build.png"))); // NOI18N
+        jButtonBuild.setToolTipText("Compilar");
+        jButtonBuild.setFocusable(false);
+        jButtonBuild.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonBuild.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonBuild.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuildActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonBuild);
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/buildrun.png"))); // NOI18N
         jButton2.setToolTipText("Compilar y Ejecutar");
@@ -135,12 +143,6 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton3);
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        jTabbedPane2.addTab("Lexico", jScrollPane1);
 
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
@@ -165,6 +167,12 @@ public class Ventana extends javax.swing.JFrame {
         jScrollPane6.setViewportView(jTextArea5);
 
         jTabbedPane2.addTab("Condigo Intermedio", jScrollPane6);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jTabbedPane2.addTab("Lexico", jScrollPane1);
 
         jToolBar2.setRollover(true);
 
@@ -303,10 +311,10 @@ public class Ventana extends javax.swing.JFrame {
                         .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 307, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 710, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -443,6 +451,34 @@ public class Ventana extends javax.swing.JFrame {
         }
         b2=true;
     }//GEN-LAST:event_jTextAreaCodeCaretUpdate
+
+    private void jButtonBuildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuildActionPerformed
+        jTextField2.setText(executeCommand("ruby Lexico.rb")); 
+        jTextArea1.setText(executeCommand("ruby Lexico.rb")); 
+        System.out.println("---------------------------");
+        System.out.println(executeCommand("ruby Lexico.rb"));
+        
+        String s;
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec("ruby Lexico.rb");
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(p.getInputStream()));
+            while ((s = br.readLine()) != null)
+                System.out.println("line: " + s);
+            p.waitFor();
+            System.out.println ("exit: " + p.exitValue());
+            p.destroy();
+        } catch (Exception e) {
+        }
+        
+        String[] execute = {"rb",  "Lexico.rb", "/home/peper/Escritorio/IDEGIT/IDE/src/ide/Lexico.rb"};
+        try {
+            Runtime.getRuntime().exec(execute);
+        } catch (IOException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonBuildActionPerformed
 
     /**
      * @param args the command line arguments
@@ -603,16 +639,36 @@ public class Ventana extends javax.swing.JFrame {
                 
         }
         b2=true;
+    }
+    
+    public String executeCommand(String command) {
+
+        StringBuilder output = new StringBuilder();
+
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec(command);
+            p.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line = "";           
+            while ((line = reader.readLine())!= null) {
+                output.append(line).append("\n");
+            }
+
+        } catch (IOException | InterruptedException e) {
         
+        }
+            return output.toString();
     }
             
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButtonBuild;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;

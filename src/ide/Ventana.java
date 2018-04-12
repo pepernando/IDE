@@ -39,7 +39,9 @@ public class Ventana extends javax.swing.JFrame {
     private Ejecutor ejecutor;
     private FileReader f;
     private Colorear c;
-
+    ThreadColorear trco;
+    
+    
     public Ventana() throws IOException {
         //comentario de modificacion
         initComponents();
@@ -65,6 +67,8 @@ public class Ventana extends javax.swing.JFrame {
         doc = jTextPaneCode.getStyledDocument();
         
         c = new Colorear(jTextPaneCode);
+        //c.agregarellistener();
+        //trco = new ThreadColorear(jTextPaneCode);
     }
 
     /**
@@ -460,12 +464,11 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        abrir();
-        try {
-            compilar();
-        } catch (IOException ex) {
-            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //try {
+            abrir();
+            //compilar();
+            //trco.start();
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -489,11 +492,6 @@ public class Ventana extends javax.swing.JFrame {
             rowNum = tln.getPx();
             colNum = tln.getPy();
             jLabel1.setText("Fila: " + rowNum + " Columna: " + colNum);
-            try {
-                c.colorear();
-            } catch (BadLocationException ex) {
-                Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         b2 = true;
     }//GEN-LAST:event_jTextPaneCodeCaretUpdate
@@ -510,11 +508,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextPaneCodeFocusGained
 
     private void jTextPaneCodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneCodeKeyTyped
-        /*try {
-            compilar2();
-        } catch (IOException ex) {
-            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+
     }//GEN-LAST:event_jTextPaneCodeKeyTyped
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

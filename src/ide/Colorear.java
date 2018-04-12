@@ -6,7 +6,11 @@
 package ide;
 
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -32,14 +36,16 @@ public class Colorear {
     private static final int MULTICOMENT = 12;
     private static final int INLINECOMMENT = 13;
     private static final int POSIBLESALIDA = 14;
-    
+    private static final int DECIMAL = 15;
     //Colores
     private static final Color COLOR_ERROR = Color.RED;
     private static final Color COLOR_DIGIT = Color.cyan;
-    private static final Color COLOR_OPERADOR = Color.orange;
+    private static final Color COLOR_OPERADOR = Color.BLACK;
     private static final Color COLOR_IDENTIF = Color.GREEN;
-    private static final Color COLOR_CADENA = Color.pink;
+    private static final Color COLOR_CADENA = Color.ORANGE;
     private static final Color COLOR_COMMENT = Color.LIGHT_GRAY;
+    private static final Color COLOR_PRESERVADA = Color.BLUE;
+
     
     private String cadena;
     private int cadSize;
@@ -63,17 +69,20 @@ public class Colorear {
         
         puntero=0;
         offsetaux = 0;
+       
+        
     }
+    
     
     public void colorear() throws BadLocationException{
         
-        StyleConstants.setForeground(style, Color.black);
-        doc.setCharacterAttributes(0, doc.getLength(), style, true);
+        //StyleConstants.setForeground(style, Color.black);
+        //doc.setCharacterAttributes(0, doc.getLength(), style, true);
         
         cadena = doc.getText(0,doc.getLength());
         cadSize = this.cadena.length();
+        estadoActual = INICIO;
         puntero = 0;
-        offsetaux = 0;
         
         while(cadSize>puntero){
         
@@ -81,6 +90,7 @@ public class Colorear {
             switch(estadoActual){
                 case INICIO: 
                     switch(caracter){
+                        case ' ':
                         case ')':
                             setWord(puntero, puntero+1,COLOR_OPERADOR);
                             estadoActual = INICIO;
@@ -141,7 +151,7 @@ public class Colorear {
                         case '/':
                             estadoActual = POSIBLECOMMENT;
                             break;
-                        case '"':
+                        case '\"':
                             estadoActual = CADENA;
                             offsetaux = puntero;
                             break;
@@ -149,10 +159,11 @@ public class Colorear {
                             if(Character.isDigit(caracter)){
                                 estadoActual = DIGITO;
                                 offsetaux = puntero;
-                            }else if ((caracter >= 'a' && caracter <= 'z') || (caracter >= 'A' && caracter <= 'Z')){
-                                setWord(puntero, puntero+1,COLOR_IDENTIF);
-                                estadoActual = INICIO;
-                        }else{                                    
+                            }else if (!(caracter >= 'a' && caracter <= 'z') || !(caracter >= 'A' && caracter <= 'Z')){
+                               setWord(puntero, puntero+1,COLOR_IDENTIF);
+                               // estadoActual = INDENTIFICADOR;
+                                ///offsetaux = puntero;
+                            }else{                                    
                                 setWord(puntero, puntero+1,COLOR_ERROR);
                                 estadoActual = INICIO;
                             }
@@ -203,41 +214,68 @@ public class Colorear {
                 estadoActual = INICIO;
                 break;
             case CADENA: 
-                if(caracter=='"'){
-                    setWord(offsetaux, puntero+1,Color.pink);
+                if(caracter=='\"'){
+                    setWord(offsetaux, puntero+1,COLOR_CADENA);
                     estadoActual = INICIO;
                 }
                 break;
             case INDENTIFICADOR: 
-                if(caracter != '_' || !Character.isDigit(caracter)){
-                    
+                if(caracter != '_' || !Character.isDigit(caracter)||!(caracter >= 'a' && caracter <= 'z')||!(caracter >= 'A' && caracter <= 'Z')){
+                    /*boolean bandaux=false;
+                    for(String actual:PRESAERVADAS){
+                        //if(doc.getText(offsetaux,puntero-1).equals(actual)){
+                        //    bandaux = true;
+                        //}
+                        //System.out.println(actual);
+                    }
+                    System.out.println(doc.getText(offsetaux,puntero));
+                    if(bandaux){
+                        //setWord(offsetaux, puntero,COLOR_PRESERVADA);
+                    }else{
+                        //setWord(offsetaux, puntero,COLOR_IDENTIF);
+                    }*/
+                    estadoActual = INICIO;
                 }
                 break;
             case DIGITO: 
                 if(caracter=='.'){
                     estadoActual = POSIBLEDECIMAL;
-                    setWord(offsetaux,puntero,COLOR_DIGIT);
                 }else if(!Character.isDigit(caracter)){
-                    setWord(offsetaux,puntero+1,Color.MAGENTA);
+                    setWord(offsetaux,puntero+1,COLOR_DIGIT);
                     puntero--;
                     estadoActual = INICIO;
                 }
                 break;
             case POSIBLEDECIMAL: 
-                    if(!Character.isDigit(caracter)){
-                        setWord(offsetaux,puntero+1,COLOR_ERROR);
-                        puntero--;
-                        estadoActual=INICIO;
-                    }
-                break;
-            case POSIBLECOMMENT: 
-                if(caracter=='/'){
-                    estadoActual = INLINECOMMENT;
-                    offsetaux = puntero-1;
+                if(!Character.isDigit(caracter)){
+                    setWord(offsetaux,puntero+1,COLOR_DIGIT);
+                    puntero-=1;
+                    estadoActual=INICIO;
                 }else{
-                   setWord(puntero-1, puntero,COLOR_OPERADOR);
-                   puntero--;
-                   estadoActual = INICIO;
+                    estadoActual = DECIMAL;
+                }
+                break;
+            case DECIMAL:
+                if(!Character.isDigit(caracter)){
+                    setWord(offsetaux,puntero,COLOR_DIGIT);
+                    puntero--;
+                    estadoActual = INICIO;
+                }
+            case POSIBLECOMMENT: 
+                switch (caracter) {
+                    case '/':
+                        estadoActual = INLINECOMMENT;
+                        offsetaux = puntero-1;
+                        break;
+                    case '*':
+                        estadoActual = MULTICOMENT;
+                        offsetaux = puntero-1;
+                        break;
+                    default:
+                        setWord(puntero-1, puntero,COLOR_OPERADOR);
+                        puntero--;
+                        estadoActual = INICIO;
+                        break;
                 }
                 break;
             case INLINECOMMENT:
@@ -247,17 +285,30 @@ public class Colorear {
                 }
                 break;
             case MULTICOMENT: 
+                    if(caracter=='*'){
+                        estadoActual=POSIBLESALIDA;
+                    }
                 break;
             case POSIBLESALIDA: 
+                    if(caracter=='/'){
+                        setWord(offsetaux,puntero+1,COLOR_COMMENT);
+                        estadoActual=INICIO; 
+                    }else{
+                        estadoActual=MULTICOMENT;
+                    }
                 break;
             }
             puntero++;
         }
+        
         if(estadoActual==CADENA){
-            setWord(offsetaux,doc.getLength(),COLOR_CADENA);
+            setWord(offsetaux,doc.getLength()-1,COLOR_CADENA);
+            System.out.println("Cadena Icompleta. con offset: " + offsetaux);
         }else if(estadoActual==MULTICOMENT||estadoActual==POSIBLESALIDA){
-            setWord(offsetaux,doc.getLength(),COLOR_COMMENT);
+            setWord(offsetaux,doc.getLength()-1,COLOR_COMMENT);
+            System.out.println("Comentario Incompleto");
         }
+        
     }
     
     public void setWord(int ini, int fin, Color c) {
@@ -267,6 +318,38 @@ public class Colorear {
         }
     }
     
+    public void agregarellistener(){
+        doc.addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                System.out.println("insert");
+                try {
+                    colorear();
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(Colorear.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                System.out.println("remove");
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                
+            }
+        });
+    }
     
-    
+    /*private void highlight() {
+
+    Runnable doHighlight = new Runnable() {
+        @Override
+        public void run() {
+             colorear();
+            }
+        };       
+        SwingUtilities.invokeLater(doHighlight);
+    }*/
 }

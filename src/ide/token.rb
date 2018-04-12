@@ -12,4 +12,8 @@ class Token
     puts "#{@linea} #{@columna} #{@tipo} #{@contenido}"
   end
 
+  def returnString
+    return "#{@linea} #{@columna} #{@tipo} #{@contenido}"
+  end
+
 end

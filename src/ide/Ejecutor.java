@@ -36,24 +36,4 @@ public class Ejecutor{
         return aux;
     }
     
-    //Nuestro famoso main para ejecutarlo
-    public static void main(String[] arg){
-        Ejecutor ejecutor = new Ejecutor();
-        
-        try{
-            //En la siguiente linea le paso el siguiente comando
-            // ls /etc/init.d que mostrara todos los demonios que estan corriendo
-            // en el sistema.
-            //ahora falta que ustedes pongan lo que requieran
-            Process p = ejecutor.comando("ruby src/ide/Lexico.rb");
-            System.out.println("Salida comando:");
-            System.out.println(ejecutor.leerBufer(ejecutor.salidaComando(p)));
-            /*System.out.println("Errores comando:");
-            System.out.println(ejecutor.leerBufer(ejecutor.errorComando(p)));*/
-        } catch(IOException e){
-            System.out.println("No se ejecuto correctamente por las sgtes razones: ");
-            System.exit(0);
-        }
-        
-    }
 }

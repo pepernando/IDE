@@ -3,6 +3,7 @@ require_relative 'token'
 class ControlToken
   def initialize
     @token = []
+    @arraytexto = ""
   end
 
   def addToken( linea,columna,tipo,contenido)
@@ -22,4 +23,13 @@ class ControlToken
       x.toString
     }
   end
+
+  def getallTokensString
+    aux = ""
+    @token.each{|x|
+      aux+="#{x.returnString}\n"
+    }
+    return aux
+  end
+
 end

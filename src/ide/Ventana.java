@@ -5,18 +5,23 @@
  */
 package ide;
 
+import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 
 /**
  *
@@ -24,11 +29,16 @@ import javax.swing.JOptionPane;
  */
 public class Ventana extends javax.swing.JFrame {
 
-    
-    TextLineNumber tln;
-    boolean p1,b2;
-    int rowNum,colNum;
-    String ruta;
+    private TextLineNumber tln;
+    private boolean p1, b2;
+    private int rowNum, colNum;
+    private String ruta;
+    private StyleContext sc;
+    private StyledDocument doc;
+    private Style style;
+    private Ejecutor ejecutor;
+    private FileReader f;
+    private Colorear c;
 
     public Ventana() throws IOException {
         //comentario de modificacion
@@ -38,15 +48,23 @@ public class Ventana extends javax.swing.JFrame {
         //comentario
         tln = new TextLineNumber(jTextPaneCode);
         jScrollPane2.setRowHeaderView(tln);
-        
+
+        style = jTextPaneCode.addStyle("Estilo", null);
         //jScrollPane2.setColumnHeaderView(tln);
+
+        ejecutor = new Ejecutor();
         
         p1 = true;
         b2 = true;
+
+        rowNum = colNum = 0;
+
+        ruta = "";
+
+        sc = new StyleContext();
+        doc = jTextPaneCode.getStyledDocument();
         
-        rowNum = colNum=0;
-        
-        ruta="";
+        c = new Colorear(jTextPaneCode);
     }
 
     /**
@@ -59,7 +77,8 @@ public class Ventana extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jTextField1 = new javax.swing.JTextField();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTextPaneErrores = new javax.swing.JTextPane();
         jTextField2 = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
         jButtonBuild = new javax.swing.JButton();
@@ -103,12 +122,10 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-        jTabbedPane1.addTab("Errores", jTextField1);
+        jTextPaneErrores.setEditable(false);
+        jScrollPane7.setViewportView(jTextPaneErrores);
+
+        jTabbedPane1.addTab("Errores", jScrollPane7);
         jTabbedPane1.addTab("Resultados", jTextField2);
 
         jToolBar1.setRollover(true);
@@ -130,6 +147,11 @@ public class Ventana extends javax.swing.JFrame {
         jButton2.setFocusable(false);
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButton2);
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/run.png"))); // NOI18N
@@ -144,6 +166,7 @@ public class Ventana extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton3);
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
@@ -217,6 +240,33 @@ public class Ventana extends javax.swing.JFrame {
         jTextPaneCode.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 jTextPaneCodeCaretUpdate(evt);
+            }
+        });
+        jTextPaneCode.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jTextPaneCodeAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        jTextPaneCode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextPaneCodeFocusGained(evt);
+            }
+        });
+        jTextPaneCode.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTextPaneCodePropertyChange(evt);
+            }
+        });
+        jTextPaneCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextPaneCodeKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextPaneCodeKeyPressed(evt);
             }
         });
         jScrollPane2.setViewportView(jTextPaneCode);
@@ -323,10 +373,8 @@ public class Ventana extends javax.swing.JFrame {
                     .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -338,32 +386,30 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         System.out.println("Este Boton Funciona");
-        
         abrir();
-        
+        try {
+            compilar();
+        } catch (IOException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        if(p1==true){
+        if (p1 == true) {
             jTabbedPane1.setVisible(false);
-            p1=false;
-        }
-        else{
+            p1 = false;
+        } else {
             jTabbedPane1.setVisible(true);
-            p1=true;
+            p1 = true;
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        
+
     }//GEN-LAST:event_formKeyPressed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -376,92 +422,109 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         jTextPaneCode.setText("");
-        ruta="";
+        ruta = "";
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Desea Guardarlo antes?", "Advertencia",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                // yes option
-                /*JFileChooser chooser = new JFileChooser();
-                
-                int returnVal = chooser.showSaveDialog(chooser);
-                
-                ruta = chooser.getSelectedFile().getAbsolutePath();
-                */
-                if(ruta.equals("")){
-                    guardarComo();
-                }else{
-                    guardar();
-                }
-                
-                System.out.println(ruta);
-            }   // no option
-            jTextPaneCode.setText("");
-            
+            if (ruta.equals("")) {
+                guardarComo();
+            } else {
+                guardar();
+            }
+        }   // no option
+        jTextPaneCode.setText("");
+
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Desea Guardarlo antes?", "Advertencia",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                if(ruta.equals("")){
-                    guardarComo();
-                }else{
-                    guardar();
-                    ruta="";
-                }
-                
-                System.out.println(ruta);
-            }   // no option
-            jTextPaneCode.setText("");
-            
+            if (ruta.equals("")) {
+                guardarComo();
+            } else {
+                guardar();
+                ruta = "";
+            }
+        }// no option    
+        jTextPaneCode.setText("");
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        
-        if(ruta.equals("")){
+        if (ruta.equals("")) {
             guardarComo();
-        }else{
+        } else {
             guardar();
         }
-        // no option
-            
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         abrir();
+        try {
+            compilar();
+        } catch (IOException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+        try {
+            c.colorear();
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButtonBuildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuildActionPerformed
-        Ejecutor ejecutor = new Ejecutor();
-        String cadaux ="";
-        guardar();
-        try{
-            Process p = ejecutor.comando("ruby src/ide/Lexico.rb " + ruta );
-            System.out.println("Salida comando:");
-            cadaux = ejecutor.leerBufer(ejecutor.salidaComando(p));
-            //System.out.println(cadaux);
-            /*System.out.println("Errores comando:");
-            System.out.println(ejecutor.leerBufer(ejecutor.errorComando(p)));*/
-        } catch(IOException e){
-            System.out.println("No se ejecuto correctamente por las sgtes razones: ");
-            System.exit(0);
+        try {
+            compilar();
+        } catch (IOException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
-        jTextArea1.setText(cadaux);
     }//GEN-LAST:event_jButtonBuildActionPerformed
 
     private void jTextPaneCodeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextPaneCodeCaretUpdate
-        if(b2){
+        if (b2) {
             rowNum = tln.getPx();
             colNum = tln.getPy();
             jLabel1.setText("Fila: " + rowNum + " Columna: " + colNum);
+            try {
+                c.colorear();
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        b2=true;
+        b2 = true;
     }//GEN-LAST:event_jTextPaneCodeCaretUpdate
+
+    private void jTextPaneCodePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextPaneCodePropertyChange
+    }//GEN-LAST:event_jTextPaneCodePropertyChange
+
+    private void jTextPaneCodeAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jTextPaneCodeAncestorAdded
+
+    }//GEN-LAST:event_jTextPaneCodeAncestorAdded
+
+    private void jTextPaneCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextPaneCodeFocusGained
+
+    }//GEN-LAST:event_jTextPaneCodeFocusGained
+
+    private void jTextPaneCodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneCodeKeyTyped
+        /*try {
+            compilar2();
+        } catch (IOException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+    }//GEN-LAST:event_jTextPaneCodeKeyTyped
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        guardar();
+        //resetStyle();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTextPaneCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneCodeKeyPressed
+        
+    }//GEN-LAST:event_jTextPaneCodeKeyPressed
 
     /**
      * @param args the command line arguments
@@ -499,150 +562,224 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
     }
-   
-    void guardarComo(){
-        try {
-            
-                JFileChooser chooser = new JFileChooser();
-                
-                int returnVal = chooser.showSaveDialog(chooser);
-                
-                ruta = chooser.getSelectedFile().getAbsolutePath();
-                
-                File file = new File(ruta);
 
-                file.createNewFile();
+    void guardarComo() {
+        try {
+            JFileChooser chooser = new JFileChooser();
+
+            int returnVal = chooser.showSaveDialog(chooser);
+
+            ruta = chooser.getSelectedFile().getAbsolutePath();
+
+            File file = new File(ruta);
+
+            file.createNewFile();
 
             // Writes the content to the file
             try ( // creates a FileWriter Object
                     FileWriter writer = new FileWriter(file)) {
-                // Writes the content to the file
-                writer.write(jTextPaneCode.getText()); 
+                writer.write(jTextPaneCode.getText());
                 writer.flush();
             }
-
-            }catch (IOException e) {
-
-            }
+        } catch (IOException e) {
+        }
     }
-    
-    void guardar(){
-        if(!"".equals(ruta)){
+
+    void guardar() {
+        if (!"".equals(ruta)) {
             try {
                 File file = new File(ruta);
-
                 //Seborra el archivo para no sobrescribirlo
-                if(file.delete()){
-                        System.out.println(file.getName() + " is deleted!");
-                    }else{
-                        System.out.println("Delete operation is failed.");
-                }
+                /*if (file.delete()) {
+                    //System.out.println(file.getName() + " is deleted!");
+                } else {
+                    //System.out.println("Delete operation is failed.");
+                }*/
 
                 file.createNewFile();
 
                 // Writes the content to the file
                 try ( // creates a FileWriter Object
-                        FileWriter writer = new FileWriter(file)) {
+                    FileWriter writer = new FileWriter(file)) {
                     // Writes the content to the file
                     writer.write(jTextPaneCode.getText());
                     writer.flush();
                 }
 
-            }catch (IOException e) {
+            } catch (IOException e) {
 
             }
-        }else{
-            if (JOptionPane.showConfirmDialog(null, "El Archivo no a sido" + 
-                    " creado\nDesea Crearlo?", "Advertencia",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-
+        } else {
+            if (JOptionPane.showConfirmDialog(null, "El Archivo no a sido"
+                    + " creado\nDesea Crearlo?", "Advertencia",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 guardarComo();
-                
-                System.out.println(ruta);
+                //System.out.println(ruta);
             } else {
                 // no option
                 jTextPaneCode.setText("");
             }
-            
-            
+
         }
     }
-    
-    void abrir(){
-        b2=false;
+
+    void abrir() {
+        b2 = false;
         String cadaxuliar = "";
         JFileChooser chooser = new JFileChooser();
         /*FileNameExtensionFilter filter = new FileNameExtensionFilter(
             "Archivos Ruby", "rb");
         chooser.setFileFilter(filter);*/
-        
-        int returnVal = chooser.showOpenDialog(chooser);
-        
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-           System.out.println("You chose to open this file: " +
-        chooser.getSelectedFile().getName());
 
-        File archivo = null;
-        FileReader fr = null;
-        BufferedReader br = null;
+        int returnVal = chooser.showOpenDialog(chooser);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            //System.out.println("You chose to open this file: " +
+            //chooser.getSelectedFile().getName());
+
+            File archivo = null;
+            FileReader fr = null;
+            BufferedReader br = null;
+
+            try {
+                // Apertura del fichero y creacion de BufferedReader para poder
+                // hacer una lectura comoda (disponer del metodo readLine()).
+                archivo = new File(chooser.getSelectedFile().getAbsolutePath());
+                fr = new FileReader(archivo);
+                br = new BufferedReader(fr);
+                ruta = chooser.getSelectedFile().getAbsolutePath();
+
+                jTextPaneCode.setText("");
+
+                // Lectura del fichero
+                String linea;
+
+                while ((linea = br.readLine()) != null) {
+                    //System.out.println(linea);
+
+                    //jTextAreaCode.setText(jTextAreaCode.getText() + linea + "\n");
+                    cadaxuliar += linea + "\n";
+                    //jTextArea1.setText(jTextArea1.getText() + linea + "\n");
+                }
+                cadaxuliar = cadaxuliar.substring(0, cadaxuliar.length() - 1);//para que no se agruegue el ultimo espacio
+                jTextPaneCode.setText(cadaxuliar);
+            } catch (IOException e) {
+            } finally {
+                try {
+                    if (null != fr) {
+                        fr.close();
+                    }
+                } catch (IOException e2) {
+                }
+            }
+
+        }
+        b2 = true;
+    }
+
+    public void colorear() throws IOException {
+        String linea = "";
+        
+        f = new FileReader("src/ide/styleddoc.txt");
+
+        if (!"".equals(jTextPaneCode.getText())) {
+            try (BufferedReader b = new BufferedReader(f)) {
+
+                //resetStyle();
+                
+                while ((linea = b.readLine()) != null) {
+                    //cadaux += linea + "\n";
+                    //System.out.println(linea);
+                    String[] spt = linea.split("\\|");
+                    //System.out.println("Offset:" + spt[0] + " Tipo:" + spt[1] + " Valor:" + spt[2]);
+                    if ("PRESERVADA".equals(spt[1])) {
+                        int auxini = Integer.parseInt(spt[0]) - spt[2].length()+1;
+                        //System.out.println("auxini" + auxini);
+                        findRemplace(auxini, Integer.parseInt(spt[0]), Color.BLUE);
+                        //System.out.println("se cumple preservada");
+                    } else if ("DIGITO".equals(spt[1])) {
+                        int auxini = Integer.parseInt(spt[0]) - spt[2].length()+1;
+                        findRemplace(auxini, Integer.parseInt(spt[0]), Color.cyan);
+                        //System.out.println("se cumple digito");
+                    } else if ("IDENTIFICADOR".equals(spt[1])) {
+                        int auxini = Integer.parseInt(spt[0]) - spt[2].length()+1;
+                        findRemplace(auxini, Integer.parseInt(spt[0]) + 1, Color.GREEN);
+                        //System.out.println("se cumple digito");
+                    }else if("OPERADOR".equals(spt[1])){
+                        int auxini = Integer.parseInt(spt[0])-spt[2].length()+1;
+                        findRemplace(auxini,Integer.parseInt(spt[0])+1,Color.BLACK);
+                    }else if("CADENA".equals(spt[1])){
+                        findRemplace(Integer.parseInt(spt[0]),Integer.parseInt(spt[2]),Color.orange);
+                    }else if("LINECOMMENT".equals(spt[1])){
+                        findRemplace(Integer.parseInt(spt[0]),Integer.parseInt(spt[2]),Color.LIGHT_GRAY);
+                    }else if("ERROR".equals(spt[0])){
+                        findRemplace(Integer.parseInt(spt[1]),Integer.parseInt(spt[1])+1,Color.red);
+                    }else if("MULTCOMMENT".equals(spt[1])){
+                        findRemplace(Integer.parseInt(spt[0]),Integer.parseInt(spt[2]),Color.lightGray);
+                    }else if("INCOMPLETCAD".equals(spt[0])){
+                        findRemplace(Integer.parseInt(spt[1]),doc.getLength(),Color.orange);
+                    }else if("INCOMPLETCOMMENT".equals(spt[0])){
+                        findRemplace(Integer.parseInt(spt[1]),doc.getLength(),Color.gray);
+                    }
+                }
+            }
+        }else{
+            System.out.println("Error panel vacio");
+        }
+    }
+
+    public void findRemplace(int ini, int fin, Color c) {
+        StyleConstants.setForeground(style, c);
+        int aux = fin - ini;
+        doc.setCharacterAttributes(ini, fin, style, true);
+    }
+
+    /*public void resetStyle() {
+        //sc.getDefaultStyleContext().getStyle(sc.DEFAULT_STYLE);
+        //Style 
+        style = jTextPaneCode.addStyle("Est24", null);
+        StyleConstants.setForeground(style, Color.LIGHT_GRAY);
+        doc.setCharacterAttributes(0, doc.getLength(), style, true);
+    }*/
+    
+    public void compilar() throws IOException {
+        String cadaux = "";
+        String caderr = "Errores Lexicos:\n";
+        guardar();
+        jTextArea1.setText("");
 
         try {
-           // Apertura del fichero y creacion de BufferedReader para poder
-           // hacer una lectura comoda (disponer del metodo readLine()).
-           archivo = new File (chooser.getSelectedFile().getAbsolutePath());
-           fr = new FileReader (archivo);
-           br = new BufferedReader(fr);
-           ruta = chooser.getSelectedFile().getAbsolutePath();
+            Process p = ejecutor.comando("ruby src/ide/Lexico.rb " + ruta);
+            cadaux = ejecutor.leerBufer(ejecutor.salidaComando(p));
+            colorear();
+        } catch (IOException e) {}
+        String linea = "";
+        
+        FileReader f = new FileReader("src/ide/errores.txt");
 
-           jTextPaneCode.setText("");
-
-           // Lectura del fichero
-           String linea;
-
-            while((linea=br.readLine())!=null){
-                //System.out.println(linea);
-                
-                //jTextAreaCode.setText(jTextAreaCode.getText() + linea + "\n");
-                cadaxuliar += linea + "\n";
-                //jTextArea1.setText(jTextArea1.getText() + linea + "\n");
+        if (!"".equals(jTextPaneCode.getText())) {
+            try (BufferedReader b = new BufferedReader(f)) {
+                while ((linea = b.readLine()) != null) {
+                    caderr+=linea+"\n";
+                }
             }
-            cadaxuliar=cadaxuliar.substring(0,cadaxuliar.length()-1);//para que no se agruegue el ultimo espacio
-            jTextPaneCode.setText(cadaxuliar);
-        }catch(IOException e){
-        }finally{
-           try{                    
-              if( null != fr ){   
-                 fr.close();     
-              }                  
-           }catch (IOException e2){ 
-           }
         }
-                
-        }
-        b2=true;
+        jTextArea1.setText(cadaux);
+        jTextPaneErrores.setText(caderr);
     }
     
-    public String executeCommand(String command) {
-
-        StringBuilder output = new StringBuilder();
-
-        Process p;
+    public void compilar2() throws IOException {
+        String cadaux = "";
+        guardar();
         try {
-            p = Runtime.getRuntime().exec(command);
-            p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line = "";           
-            while ((line = reader.readLine())!= null) {
-                output.append(line).append("\n");
-            }
-
-        } catch (IOException | InterruptedException e) {
-        
-        }
-            return output.toString();
-    }
+            Process p = ejecutor.comando("ruby src/ide/Lexico.rb " + ruta);
+            ejecutor.leerBufer(ejecutor.salidaComando(p));
+            colorear();
+        } catch (IOException e) {
             
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -667,6 +804,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -676,9 +814,9 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea5;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextPane jTextPaneCode;
+    private javax.swing.JTextPane jTextPaneErrores;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     // End of variables declaration//GEN-END:variables

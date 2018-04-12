@@ -20,10 +20,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 /**
@@ -36,13 +34,11 @@ public class Ventana extends javax.swing.JFrame {
     private boolean p1, b2;
     private int rowNum, colNum;
     private String ruta;
-    private StyleContext sc;
     private StyledDocument doc;
     private Style style;
     private Ejecutor ejecutor;
-    private FileReader f;
+    private FileReader filereader;
     private Colorear c;
-    ThreadColorear trco;
     
     
     public Ventana() throws IOException {
@@ -53,25 +49,20 @@ public class Ventana extends javax.swing.JFrame {
         //comentario
         tln = new TextLineNumber(jTextPaneCode);
         jScrollPane2.setRowHeaderView(tln);
-
         style = jTextPaneCode.addStyle("Estilo", null);
-        //jScrollPane2.setColumnHeaderView(tln);
-
         ejecutor = new Ejecutor();
-        
         p1 = true;
         b2 = true;
-
         rowNum = colNum = 0;
-
-        ruta = "";
-
-        sc = new StyleContext();
+        
+        ruta = "src/txtFiles/styleddoc.txt";
+        File f = new File(ruta);
+        f.createNewFile();
+        
         doc = jTextPaneCode.getStyledDocument();
         
         //c = new Colorear(jTextPaneCode);
         //c.agregarellistener();
-        //trco = new ThreadColorear(jTextPaneCode);
     }
 
     /**
@@ -88,9 +79,9 @@ public class Ventana extends javax.swing.JFrame {
         jTextPaneErrores = new javax.swing.JTextPane();
         jTextField2 = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
-        jButtonBuild = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jButtonCompilar = new javax.swing.JButton();
+        jButtonCompilarEjecutar = new javax.swing.JButton();
+        jButtonEjecutar = new javax.swing.JButton();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -103,22 +94,22 @@ public class Ventana extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea5 = new javax.swing.JTextArea();
         jToolBar2 = new javax.swing.JToolBar();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        jButtonAbrir = new javax.swing.JButton();
+        jButtonNuevo = new javax.swing.JButton();
+        jButtonGuardar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPaneCode = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        jMenuNuevo = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItemAbir = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem7 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItemCerrar = new javax.swing.JMenuItem();
+        jMenuItemGuardar = new javax.swing.JMenuItem();
+        jMenuItemGuardarcomo = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItemSalir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
 
@@ -137,41 +128,41 @@ public class Ventana extends javax.swing.JFrame {
 
         jToolBar1.setRollover(true);
 
-        jButtonBuild.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/build.png"))); // NOI18N
-        jButtonBuild.setToolTipText("Compilar");
-        jButtonBuild.setFocusable(false);
-        jButtonBuild.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonBuild.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButtonBuild.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/build.png"))); // NOI18N
+        jButtonCompilar.setToolTipText("Compilar");
+        jButtonCompilar.setFocusable(false);
+        jButtonCompilar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonCompilar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonCompilar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBuildActionPerformed(evt);
+                jButtonCompilarActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButtonBuild);
+        jToolBar1.add(jButtonCompilar);
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/buildrun.png"))); // NOI18N
-        jButton2.setToolTipText("Compilar y Ejecutar");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCompilarEjecutar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/buildrun.png"))); // NOI18N
+        jButtonCompilarEjecutar.setToolTipText("Compilar y Ejecutar");
+        jButtonCompilarEjecutar.setFocusable(false);
+        jButtonCompilarEjecutar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonCompilarEjecutar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonCompilarEjecutar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonCompilarEjecutarActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton2);
+        jToolBar1.add(jButtonCompilarEjecutar);
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/run.png"))); // NOI18N
-        jButton3.setToolTipText("Ejecutar");
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonEjecutar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/run.png"))); // NOI18N
+        jButtonEjecutar.setToolTipText("Ejecutar");
+        jButtonEjecutar.setFocusable(false);
+        jButtonEjecutar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonEjecutar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonEjecutar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButtonEjecutarActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton3);
+        jToolBar1.add(jButtonEjecutar);
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
@@ -206,41 +197,41 @@ public class Ventana extends javax.swing.JFrame {
 
         jToolBar2.setRollover(true);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/open.png"))); // NOI18N
-        jButton4.setToolTipText("Abrir");
-        jButton4.setFocusable(false);
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/open.png"))); // NOI18N
+        jButtonAbrir.setToolTipText("Abrir");
+        jButtonAbrir.setFocusable(false);
+        jButtonAbrir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonAbrir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButtonAbrirActionPerformed(evt);
             }
         });
-        jToolBar2.add(jButton4);
+        jToolBar2.add(jButtonAbrir);
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/new.png"))); // NOI18N
-        jButton5.setToolTipText("Nuevo");
-        jButton5.setFocusable(false);
-        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        jButtonNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/new.png"))); // NOI18N
+        jButtonNuevo.setToolTipText("Nuevo");
+        jButtonNuevo.setFocusable(false);
+        jButtonNuevo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonNuevo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                jButtonNuevoActionPerformed(evt);
             }
         });
-        jToolBar2.add(jButton5);
+        jToolBar2.add(jButtonNuevo);
 
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/save.png"))); // NOI18N
-        jButton6.setToolTipText("Guardar");
-        jButton6.setFocusable(false);
-        jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        jButtonGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/save.png"))); // NOI18N
+        jButtonGuardar.setToolTipText("Guardar");
+        jButtonGuardar.setFocusable(false);
+        jButtonGuardar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonGuardar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                jButtonGuardarActionPerformed(evt);
             }
         });
-        jToolBar2.add(jButton6);
+        jToolBar2.add(jButtonGuardar);
 
         jLabel1.setText("Linnea: 0 Columna: 0");
 
@@ -250,12 +241,12 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
         jTextPaneCode.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 jTextPaneCodeAncestorAdded(evt);
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
         });
         jTextPaneCode.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -278,7 +269,7 @@ public class Ventana extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jTextPaneCode);
 
-        jMenu1.setText("Archivo");
+        jMenuNuevo.setText("Archivo");
 
         jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/new.png"))); // NOI18N
@@ -288,58 +279,58 @@ public class Ventana extends javax.swing.JFrame {
                 jMenuItem6ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem6);
+        jMenuNuevo.add(jMenuItem6);
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/open.png"))); // NOI18N
-        jMenuItem1.setText("Abrir");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemAbir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemAbir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/open.png"))); // NOI18N
+        jMenuItemAbir.setText("Abrir");
+        jMenuItemAbir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                jMenuItemAbirActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
-        jMenu1.add(jSeparator1);
+        jMenuNuevo.add(jMenuItemAbir);
+        jMenuNuevo.add(jSeparator1);
 
-        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/close.png"))); // NOI18N
-        jMenuItem7.setText("Cerrar");
-        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemCerrar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/close.png"))); // NOI18N
+        jMenuItemCerrar.setText("Cerrar");
+        jMenuItemCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem7ActionPerformed(evt);
+                jMenuItemCerrarActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem7);
+        jMenuNuevo.add(jMenuItemCerrar);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/save.png"))); // NOI18N
-        jMenuItem3.setText("Guardar");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemGuardar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/save.png"))); // NOI18N
+        jMenuItemGuardar.setText("Guardar");
+        jMenuItemGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                jMenuItemGuardarActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem3);
+        jMenuNuevo.add(jMenuItemGuardar);
 
-        jMenuItem4.setText("Guerdar como...");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemGuardarcomo.setText("Guerdar como...");
+        jMenuItemGuardarcomo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                jMenuItemGuardarcomoActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem4);
-        jMenu1.add(jSeparator2);
+        jMenuNuevo.add(jMenuItemGuardarcomo);
+        jMenuNuevo.add(jSeparator2);
 
-        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/exit.png"))); // NOI18N
-        jMenuItem2.setText("Salir");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ide/Icons/exit.png"))); // NOI18N
+        jMenuItemSalir.setText("Salir");
+        jMenuItemSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                jMenuItemSalirActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        jMenuNuevo.add(jMenuItemSalir);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(jMenuNuevo);
 
         jMenu2.setText("Editar");
 
@@ -391,7 +382,7 @@ public class Ventana extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void jMenuItemAbirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAbirActionPerformed
         System.out.println("Este Boton Funciona");
         abrir();
         try {
@@ -399,7 +390,7 @@ public class Ventana extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_jMenuItemAbirActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         if (p1 == true) {
@@ -411,26 +402,26 @@ public class Ventana extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void jMenuItemSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSalirActionPerformed
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_jMenuItemSalirActionPerformed
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
 
     }//GEN-LAST:event_formKeyPressed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void jMenuItemGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGuardarActionPerformed
         guardar();
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_jMenuItemGuardarActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    private void jMenuItemGuardarcomoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGuardarcomoActionPerformed
         guardarComo();
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    }//GEN-LAST:event_jMenuItemGuardarcomoActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+    private void jMenuItemCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCerrarActionPerformed
         jTextPaneCode.setText("");
         ruta = "";
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
+    }//GEN-LAST:event_jMenuItemCerrarActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Desea Guardarlo antes?", "Advertencia",
@@ -445,7 +436,7 @@ public class Ventana extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Desea Guardarlo antes?", "Advertencia",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             if (ruta.equals("")) {
@@ -456,40 +447,40 @@ public class Ventana extends javax.swing.JFrame {
             }
         }// no option    
         jTextPaneCode.setText("");
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_jButtonNuevoActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
         if (ruta.equals("")) {
             guardarComo();
         } else {
             guardar();
         }
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_jButtonGuardarActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jButtonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAbrirActionPerformed
         //try {
             abrir();
             //compilar();
             //trco.start();
         
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_jButtonAbrirActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButtonEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEjecutarActionPerformed
         /*try {
             //c.colorear();
         } catch (BadLocationException ex) {
             Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
         }*/
         agregarellistener();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jButtonEjecutarActionPerformed
 
-    private void jButtonBuildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuildActionPerformed
+    private void jButtonCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCompilarActionPerformed
         try {
             compilar();
         } catch (IOException ex) {
             Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButtonBuildActionPerformed
+    }//GEN-LAST:event_jButtonCompilarActionPerformed
 
     private void jTextPaneCodeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextPaneCodeCaretUpdate
         if (b2) {
@@ -515,10 +506,10 @@ public class Ventana extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jTextPaneCodeKeyTyped
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButtonCompilarEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCompilarEjecutarActionPerformed
         guardar();
         //resetStyle();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButtonCompilarEjecutarActionPerformed
 
     private void jTextPaneCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneCodeKeyPressed
         
@@ -540,18 +531,9 @@ public class Ventana extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             try {
                 new Ventana().setVisible(true);
@@ -584,16 +566,10 @@ public class Ventana extends javax.swing.JFrame {
     }
 
     void guardar() {
-        if (!"".equals(ruta)) {
+        if (!"src/src/txtFiles/styleddoc.txt".equals(ruta)) {
             try {
                 File file = new File(ruta);
-                //Seborra el archivo para no sobrescribirlo
-                /*if (file.delete()) {
-                    //System.out.println(file.getName() + " is deleted!");
-                } else {
-                    //System.out.println("Delete operation is failed.");
-                }*/
-
+                
                 file.createNewFile();
 
                 // Writes the content to the file
@@ -623,15 +599,12 @@ public class Ventana extends javax.swing.JFrame {
 
     void abrir() {
         b2 = false;
-        String cadaxuliar = "";
-        JFileChooser chooser = new JFileChooser();
-        /*FileNameExtensionFilter filter = new FileNameExtensionFilter(
-            "Archivos Ruby", "rb");
-        chooser.setFileFilter(filter);*/
+            String cadaxuliar = "";
+            JFileChooser chooser = new JFileChooser();
+        
+            int returnVal = chooser.showOpenDialog(chooser);
 
-        int returnVal = chooser.showOpenDialog(chooser);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
             //System.out.println("You chose to open this file: " +
             //chooser.getSelectedFile().getName());
 
@@ -640,24 +613,15 @@ public class Ventana extends javax.swing.JFrame {
             BufferedReader br = null;
 
             try {
-                // Apertura del fichero y creacion de BufferedReader para poder
-                // hacer una lectura comoda (disponer del metodo readLine()).
                 archivo = new File(chooser.getSelectedFile().getAbsolutePath());
                 fr = new FileReader(archivo);
                 br = new BufferedReader(fr);
                 ruta = chooser.getSelectedFile().getAbsolutePath();
 
-                jTextPaneCode.setText("");
-
-                // Lectura del fichero
                 String linea;
 
                 while ((linea = br.readLine()) != null) {
-                    //System.out.println(linea);
-
-                    //jTextAreaCode.setText(jTextAreaCode.getText() + linea + "\n");
                     cadaxuliar += linea + "\n";
-                    //jTextArea1.setText(jTextArea1.getText() + linea + "\n");
                 }
                 cadaxuliar = cadaxuliar.substring(0, cadaxuliar.length() - 1);//para que no se agruegue el ultimo espacio
                 jTextPaneCode.setText(cadaxuliar);
@@ -678,10 +642,10 @@ public class Ventana extends javax.swing.JFrame {
     public void colorear() throws IOException {
         String linea = "";
         
-        f = new FileReader("src/txtFiles/styleddoc.txt");
+        filereader = new FileReader("src/txtFiles/styleddoc.txt");
 
         if (doc.getLength()!=0) {
-            try (BufferedReader b = new BufferedReader(f)) {
+            try (BufferedReader b = new BufferedReader(filereader)) {
 
                 //resetStyle();
                 
@@ -751,13 +715,6 @@ public class Ventana extends javax.swing.JFrame {
         doc.setCharacterAttributes(ini, fin, style, true);
     }
 
-    /*public void resetStyle() {
-        //sc.getDefaultStyleContext().getStyle(sc.DEFAULT_STYLE);
-        //Style 
-        style = jTextPaneCode.addStyle("Est24", null);
-        StyleConstants.setForeground(style, Color.LIGHT_GRAY);
-        doc.setCharacterAttributes(0, doc.getLength(), style, true);
-    }*/
     
     public void compilar() throws IOException {
         String cadaux = "";
@@ -812,23 +769,23 @@ public class Ventana extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButtonBuild;
+    private javax.swing.JButton jButtonAbrir;
+    private javax.swing.JButton jButtonCompilar;
+    private javax.swing.JButton jButtonCompilarEjecutar;
+    private javax.swing.JButton jButtonEjecutar;
+    private javax.swing.JButton jButtonGuardar;
+    private javax.swing.JButton jButtonNuevo;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItemAbir;
+    private javax.swing.JMenuItem jMenuItemCerrar;
+    private javax.swing.JMenuItem jMenuItemGuardar;
+    private javax.swing.JMenuItem jMenuItemGuardarcomo;
+    private javax.swing.JMenuItem jMenuItemSalir;
+    private javax.swing.JMenu jMenuNuevo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

@@ -60,7 +60,7 @@ public class Ventana extends javax.swing.JFrame {
         f.createNewFile();
         
         doc = jTextPaneCode.getStyledDocument();
-        RunnableColorear();
+        agregarellistener();
         //c = new Colorear(jTextPaneCode);
         //c.agregarellistener();
     }

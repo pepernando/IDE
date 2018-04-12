@@ -324,7 +324,6 @@ while cadsize > puntero
       styleddoc+= "#{puntero}|OPERADOR|/\n"
       estadoActual = estados[:inicio]
     end
-
   when estados[:multipecomment]
     if cadena[puntero] == '*'
       estadoActual = estados[:posiblesalida]

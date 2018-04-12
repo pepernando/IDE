@@ -17,6 +17,9 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -66,7 +69,7 @@ public class Ventana extends javax.swing.JFrame {
         sc = new StyleContext();
         doc = jTextPaneCode.getStyledDocument();
         
-        c = new Colorear(jTextPaneCode);
+        //c = new Colorear(jTextPaneCode);
         //c.agregarellistener();
         //trco = new ThreadColorear(jTextPaneCode);
     }
@@ -472,11 +475,12 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try {
-            c.colorear();
+        /*try {
+            //c.colorear();
         } catch (BadLocationException ex) {
             Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
+        agregarellistener();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButtonBuildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuildActionPerformed
@@ -676,7 +680,7 @@ public class Ventana extends javax.swing.JFrame {
         
         f = new FileReader("src/ide/styleddoc.txt");
 
-        if (!"".equals(jTextPaneCode.getText())) {
+        if (doc.getLength()!=0) {
             try (BufferedReader b = new BufferedReader(f)) {
 
                 //resetStyle();
@@ -720,6 +724,25 @@ public class Ventana extends javax.swing.JFrame {
         }else{
             System.out.println("Error panel vacio");
         }
+    }
+    
+    public void agregarellistener(){
+        doc.addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                RunnableColorear();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                RunnableColorear();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                
+            }
+        });
     }
 
     public void findRemplace(int ini, int fin, Color c) {
@@ -772,6 +795,20 @@ public class Ventana extends javax.swing.JFrame {
         } catch (IOException e) {
             
         }
+    }
+    
+    private void RunnableColorear(){
+        Runnable resaltar = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    compilar();
+                } catch (IOException ex) {
+                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        SwingUtilities.invokeLater(resaltar);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

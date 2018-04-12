@@ -368,5 +368,5 @@ end
 
 ct.getallTokens
 
-File.open("src/ide/errores.txt",'w') {|f| f.write(cterrores.getallTokensString) }
-File.open("src/ide/styleddoc.txt",'w') {|f| f.write(styleddoc) }
+File.open("src/txtFiles/errores.txt",'w') {|f| f.write(cterrores.getallTokensString) }
+File.open("src/txtFiles/styleddoc.txt",'w') {|f| f.write(styleddoc) }

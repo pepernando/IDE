@@ -678,7 +678,7 @@ public class Ventana extends javax.swing.JFrame {
     public void colorear() throws IOException {
         String linea = "";
         
-        f = new FileReader("src/ide/styleddoc.txt");
+        f = new FileReader("src/txtFiles/styleddoc.txt");
 
         if (doc.getLength()!=0) {
             try (BufferedReader b = new BufferedReader(f)) {
@@ -766,13 +766,13 @@ public class Ventana extends javax.swing.JFrame {
         jTextArea1.setText("");
 
         try {
-            Process p = ejecutor.comando("ruby src/ide/Lexico.rb " + ruta);
+            Process p = ejecutor.comando("ruby src/Ruby/Lexico.rb " + ruta);
             cadaux = ejecutor.leerBufer(ejecutor.salidaComando(p));
             colorear();
         } catch (IOException e) {}
         String linea = "";
         
-        FileReader f = new FileReader("src/ide/errores.txt");
+        FileReader f = new FileReader("src/txtFiles/errores.txt");
 
         if (!"".equals(jTextPaneCode.getText())) {
             try (BufferedReader b = new BufferedReader(f)) {
@@ -789,7 +789,7 @@ public class Ventana extends javax.swing.JFrame {
         String cadaux = "";
         guardar();
         try {
-            Process p = ejecutor.comando("ruby src/ide/Lexico.rb " + ruta);
+            Process p = ejecutor.comando("ruby src/Ruby/Lexico.rb " + ruta);
             ejecutor.leerBufer(ejecutor.salidaComando(p));
             colorear();
         } catch (IOException e) {

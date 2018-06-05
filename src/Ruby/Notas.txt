@@ -1,0 +1,22 @@
+guia para entrega del programa
+::= se define como
+| or
+{} repeticion
+[] opcional
+los terminales entre comi;;as ejemplo 'if' , '5'
+
+Gramatica para representar numeros con decimales
+numero ::= entPos | entPos '.' entPos
+entPos ::= digito | digito entPos
+digito ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+
+en E-BNF(Extended BNF) se agrega lo siguiente
+? opcional
+* 0 a n Veces
++ 1 a n Veces
+
+Ejemplo anterior en E-BNF
+
+numeros ::= digito + ( '.' digito + ) ?
+digito ::= '0' := '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+

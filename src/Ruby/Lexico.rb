@@ -42,7 +42,6 @@ palabrasResesrvadas = ["main","if","then","else","end","do","while","repeat","un
 
 estados = {
   :inicio => 1,
-  :fin => 0,
   :suma => 2,
   :resta => 3,
   :asignacion => 4,
@@ -60,6 +59,8 @@ estados = {
   :posiblesalida => 16,
   :decimal => 17
 }
+
+
 estadoActual = estados[:inicio]
 
 #Inicio del Automata
@@ -129,6 +130,9 @@ while cadsize > puntero
     when '='
       estadoActual = estados[:comparacion]
     when ' '
+      #nada
+    when "\t"
+      #puts "Se encontro un tab"  
       #nada
     when '"'
       estadoActual = estados[:cadena]
@@ -292,7 +296,7 @@ while cadsize > puntero
       puntero-=2
       columna-=2
       colaux = columna - contentToken.length+1
-      ct.addToken(linea,colaux,"Decimal",contentToken)
+      ct.addToken(linea,colaux,"Entero",contentToken)
       styleddoc+="#{puntero}|DIGITO|#{contentToken}\n"
       #cterrores.addToken(linea,colaux,"Error",contentToken)
       #styleddoc+="ERROR|#{puntero-1}\n"
@@ -368,5 +372,5 @@ end
 
 ct.getallTokens
 
-File.open("src/txtFiles/errores.txt",'w') {|f| f.write(cterrores.getallTokensString) }
-File.open("src/txtFiles/styleddoc.txt",'w') {|f| f.write(styleddoc) }
+File.open("../txtFiles/errores.txt",'w') {|f| f.write(cterrores.getallTokensString) }
+File.open("../txtFiles/styleddoc.txt",'w') {|f| f.write(styleddoc) }

@@ -77,14 +77,23 @@ public class Ventana extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        jTextPaneErrores = new javax.swing.JTextPane();
-        jTextField2 = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
         jButtonCompilar = new javax.swing.JButton();
         jButtonCompilarEjecutar = new javax.swing.JButton();
         jButtonEjecutar = new javax.swing.JButton();
+        jToolBar2 = new javax.swing.JToolBar();
+        jButtonAbrir = new javax.swing.JButton();
+        jButtonNuevo = new javax.swing.JButton();
+        jButtonGuardar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTextPaneErrores = new javax.swing.JTextPane();
+        jTextField2 = new javax.swing.JTextField();
+        jSplitPane2 = new javax.swing.JSplitPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPaneCode = new javax.swing.JTextPane();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -96,13 +105,6 @@ public class Ventana extends javax.swing.JFrame {
         jTextArea5 = new javax.swing.JTextArea();
         jScrollPane9 = new javax.swing.JScrollPane();
         jTree2 = new javax.swing.JTree();
-        jToolBar2 = new javax.swing.JToolBar();
-        jButtonAbrir = new javax.swing.JButton();
-        jButtonNuevo = new javax.swing.JButton();
-        jButtonGuardar = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPaneCode = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuNuevo = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -123,12 +125,6 @@ public class Ventana extends javax.swing.JFrame {
                 formKeyPressed(evt);
             }
         });
-
-        jTextPaneErrores.setEditable(false);
-        jScrollPane7.setViewportView(jTextPaneErrores);
-
-        jTabbedPane1.addTab("Errores", jScrollPane7);
-        jTabbedPane1.addTab("Resultados", jTextField2);
 
         jToolBar1.setRollover(true);
 
@@ -167,35 +163,6 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButtonEjecutar);
-
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        jTabbedPane2.addTab("Lexico", jScrollPane1);
-
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane4.setViewportView(jTextArea3);
-
-        jTabbedPane2.addTab("Semantico", jScrollPane4);
-
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jScrollPane5.setViewportView(jTextArea4);
-
-        jTabbedPane2.addTab("Hash Table", jScrollPane5);
-
-        jTextArea5.setColumns(20);
-        jTextArea5.setRows(5);
-        jScrollPane6.setViewportView(jTextArea5);
-
-        jTabbedPane2.addTab("Condigo Intermedio", jScrollPane6);
-
-        jScrollPane9.setViewportView(jTree2);
-
-        jTabbedPane2.addTab("Sintactico", jScrollPane9);
 
         jToolBar2.setRollover(true);
 
@@ -237,6 +204,19 @@ public class Ventana extends javax.swing.JFrame {
 
         jLabel1.setText("Linnea: 0 Columna: 0");
 
+        jSplitPane1.setDividerLocation(500);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jTextPaneErrores.setEditable(false);
+        jScrollPane7.setViewportView(jTextPaneErrores);
+
+        jTabbedPane1.addTab("Errores", jScrollPane7);
+        jTabbedPane1.addTab("Resultados", jTextField2);
+
+        jSplitPane1.setBottomComponent(jTabbedPane1);
+
+        jSplitPane2.setDividerLocation(750);
+
         jTextPaneCode.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 jTextPaneCodeCaretUpdate(evt);
@@ -270,6 +250,41 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(jTextPaneCode);
+
+        jSplitPane2.setLeftComponent(jScrollPane2);
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jTabbedPane2.addTab("Lexico", jScrollPane1);
+
+        jTextArea3.setColumns(20);
+        jTextArea3.setRows(5);
+        jScrollPane4.setViewportView(jTextArea3);
+
+        jTabbedPane2.addTab("Semantico", jScrollPane4);
+
+        jTextArea4.setColumns(20);
+        jTextArea4.setRows(5);
+        jScrollPane5.setViewportView(jTextArea4);
+
+        jTabbedPane2.addTab("Hash Table", jScrollPane5);
+
+        jTextArea5.setColumns(20);
+        jTextArea5.setRows(5);
+        jScrollPane6.setViewportView(jTextArea5);
+
+        jTabbedPane2.addTab("Condigo Intermedio", jScrollPane6);
+
+        jScrollPane9.setViewportView(jTree2);
+
+        jTabbedPane2.addTab("Sintactico", jScrollPane9);
+
+        jSplitPane2.setRightComponent(jTabbedPane2);
+
+        jSplitPane1.setLeftComponent(jSplitPane2);
 
         jMenuNuevo.setText("Archivo");
 
@@ -360,7 +375,6 @@ public class Ventana extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel1))
@@ -368,10 +382,7 @@ public class Ventana extends javax.swing.JFrame {
                 .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 758, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 997, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -380,12 +391,8 @@ public class Ventana extends javax.swing.JFrame {
                     .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -821,6 +828,8 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTextArea jTextArea1;

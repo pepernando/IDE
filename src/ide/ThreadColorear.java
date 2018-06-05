@@ -30,8 +30,6 @@ public class ThreadColorear extends Thread{
             }
 
         } catch (InterruptedException e) {
-        } catch (BadLocationException ex) {
-            Logger.getLogger(ThreadColorear.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

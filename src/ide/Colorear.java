@@ -313,7 +313,7 @@ public class Colorear {
                 break;
         }
             
-        System.out.println("Estado Final es:" + estadoActual);
+        //System.out.println("Estado Final es:" + estadoActual);
     }
     
     public void setWord(int ini, int fin, Color c) {

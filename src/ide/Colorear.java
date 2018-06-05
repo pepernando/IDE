@@ -8,7 +8,13 @@ package ide;
 
 
 import java.awt.Color;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -40,9 +46,7 @@ public class Colorear {
     private static final Color COLOR_COMMENT = Color.LIGHT_GRAY;
     private static final Color COLOR_PRESERVADA = Color.BLUE;
     
-    String letra = "[a-zA-Z]";
-    
-    private String cadena;
+     private String cadena;
     private int cadSize;
     private char caracter;
     private final String[] PRESERVADAS = {"main","if","then","else","end","do","while","repeat","until","read","write","float","integer","bool"};
@@ -51,9 +55,9 @@ public class Colorear {
     private int estadoActual;
     private int puntero;
     private int offsetaux;
+    private boolean cambios;
     
-    @SuppressWarnings("empty-statement")
-    public Colorear(JTextPane tp) {
+   public Colorear(JTextPane tp) {
         this.cadena = tp.getText();
         doc = tp.getStyledDocument();
         
@@ -64,17 +68,19 @@ public class Colorear {
         estadoActual = INICIO;
         puntero=0;
         offsetaux = 0;
-       
         
+        cambios = false;
+     
     }
     
     
-    public void colorear() throws BadLocationException{
+    public void colorear(){
         
-        //StyleConstants.setForeground(style, Color.black);
-        //doc.setCharacterAttributes(0, doc.getLength(), style, true);
-        
-        cadena = doc.getText(0,doc.getLength());
+        try {
+            cadena = doc.getText(0,doc.getLength());
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Colorear.class.getName()).log(Level.SEVERE, null, ex);
+        }
         cadSize = this.cadena.length();
         
         estadoActual = INICIO;
@@ -273,6 +279,7 @@ public class Colorear {
             puntero++;
         }
         
+        
         switch (estadoActual) {
             case CADENA:
                 setWord(offsetaux,doc.getLength()-1,COLOR_CADENA);
@@ -322,21 +329,33 @@ public class Colorear {
         return (aux >= 'a' && aux <= 'z') || (aux >= 'A' && aux <= 'Z');
     }
     
-    /*public void agregarellistener(){
+    
+    private void RunnableColorear(){
+        Runnable resaltar = () -> {
+            colorear();
+        };
+        SwingUtilities.invokeLater(resaltar);
+       
+    }
+    
+    public void agregarellistener(){
         doc.addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                System.out.println("insert");
-                try {
+                //System.out.println("insert");
+                /*try {
                     colorear();
                 } catch (BadLocationException ex) {
                     Logger.getLogger(Colorear.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }*/
+                RunnableColorear();
+                
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                System.out.println("remove");
+                //System.out.println("remove");
+                RunnableColorear();
             }
 
             @Override
@@ -344,5 +363,5 @@ public class Colorear {
                 
             }
         });
-    }*/
+    }
 }

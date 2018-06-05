@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -39,6 +40,7 @@ public class Ventana extends javax.swing.JFrame {
     private Ejecutor ejecutor;
     private FileReader filereader;
     private Colorear c;
+    boolean cambios = false;
     
     
     public Ventana() throws IOException {
@@ -60,9 +62,10 @@ public class Ventana extends javax.swing.JFrame {
         f.createNewFile();
         
         doc = jTextPaneCode.getStyledDocument();
-        agregarellistener();
-        //c = new Colorear(jTextPaneCode);
-        //c.agregarellistener();
+        
+        //agregarellistener();
+        c = new Colorear(jTextPaneCode);
+        c.agregarellistener();
     }
 
     /**
@@ -85,14 +88,14 @@ public class Ventana extends javax.swing.JFrame {
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTextArea4 = new javax.swing.JTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea5 = new javax.swing.JTextArea();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        jTree2 = new javax.swing.JTree();
         jToolBar2 = new javax.swing.JToolBar();
         jButtonAbrir = new javax.swing.JButton();
         jButtonNuevo = new javax.swing.JButton();
@@ -112,6 +115,7 @@ public class Ventana extends javax.swing.JFrame {
         jMenuItemSalir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addKeyListener(new java.awt.event.KeyAdapter() {
@@ -171,12 +175,6 @@ public class Ventana extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Lexico", jScrollPane1);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane3.setViewportView(jTextArea2);
-
-        jTabbedPane2.addTab("Sintactico", jScrollPane3);
-
         jTextArea3.setColumns(20);
         jTextArea3.setRows(5);
         jScrollPane4.setViewportView(jTextArea3);
@@ -194,6 +192,10 @@ public class Ventana extends javax.swing.JFrame {
         jScrollPane6.setViewportView(jTextArea5);
 
         jTabbedPane2.addTab("Condigo Intermedio", jScrollPane6);
+
+        jScrollPane9.setViewportView(jTree2);
+
+        jTabbedPane2.addTab("Sintactico", jScrollPane9);
 
         jToolBar2.setRollover(true);
 
@@ -342,6 +344,14 @@ public class Ventana extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem5);
 
+        jMenuItem1.setText("Expandir/Contraer Arbol");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -469,11 +479,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonAbrirActionPerformed
 
     private void jButtonEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEjecutarActionPerformed
-        /*try {
-            //c.colorear();
-        } catch (BadLocationException ex) {
-            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        c.colorear();
     }//GEN-LAST:event_jButtonEjecutarActionPerformed
 
     private void jButtonCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCompilarActionPerformed
@@ -516,6 +522,10 @@ public class Ventana extends javax.swing.JFrame {
     private void jTextPaneCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneCodeKeyPressed
         
     }//GEN-LAST:event_jTextPaneCodeKeyPressed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        expandAllNodes(jTree2,0, 0);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -697,6 +707,8 @@ public class Ventana extends javax.swing.JFrame {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 RunnableColorear();
+                //cambios = true;
+                
             }
 
             @Override
@@ -727,8 +739,10 @@ public class Ventana extends javax.swing.JFrame {
         try {
             Process p = ejecutor.comando("ruby src/Ruby/Lexico.rb " + ruta);
             cadaux = ejecutor.leerBufer(ejecutor.salidaComando(p));
-            colorear();
-        } catch (IOException e) {}
+            //colorear();
+        } catch (IOException e) {
+            System.out.println("Error al ejectutar rb");
+        }
         String linea = "";
         
         FileReader f = new FileReader("src/txtFiles/errores.txt");
@@ -745,7 +759,6 @@ public class Ventana extends javax.swing.JFrame {
     }
     
     public void compilar2() throws IOException {
-        String cadaux = "";
         guardar();
         try {
             Process p = ejecutor.comando("ruby src/Ruby/Lexico.rb " + ruta);
@@ -757,18 +770,27 @@ public class Ventana extends javax.swing.JFrame {
     }
     
     private void RunnableColorear(){
-        Runnable resaltar = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    //compilar();
-                    compilar2();
-                } catch (IOException ex) {
-                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        Runnable resaltar = () -> {
+            try {
+                //compilar();
+                compilar2();
+            } catch (IOException ex) {
+                Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
             }
         };
         SwingUtilities.invokeLater(resaltar);
+       
+    }
+    
+    private void expandAllNodes(JTree tree, int startingIndex, int rowCount){
+        for(int i=startingIndex;i<rowCount;++i){
+            tree.expandRow(i);
+            //tree.collapseRow(i);
+        }
+
+        if(tree.getRowCount()!=rowCount){
+            expandAllNodes(tree, rowCount, tree.getRowCount());
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -781,6 +803,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItemAbir;
@@ -791,17 +814,16 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuNuevo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea5;
@@ -810,5 +832,6 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JTextPane jTextPaneErrores;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
+    private javax.swing.JTree jTree2;
     // End of variables declaration//GEN-END:variables
 }

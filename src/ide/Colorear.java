@@ -8,7 +8,6 @@ package ide;
 
 
 import java.awt.Color;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextPane;
@@ -40,11 +39,11 @@ public class Colorear {
     //Colores
     private static final Color COLOR_ERROR = Color.RED;
     private static final Color COLOR_DIGIT = Color.cyan;
-    private static final Color COLOR_OPERADOR = Color.BLACK;
+    private static final Color COLOR_OPERADOR = Color.WHITE;
     private static final Color COLOR_IDENTIF = Color.GREEN;
     private static final Color COLOR_CADENA = Color.ORANGE;
     private static final Color COLOR_COMMENT = Color.LIGHT_GRAY;
-    private static final Color COLOR_PRESERVADA = Color.BLUE;
+    private static final Color COLOR_PRESERVADA = new Color(197,134,192);
     
      private String cadena;
     private int cadSize;

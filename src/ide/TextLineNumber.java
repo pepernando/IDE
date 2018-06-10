@@ -29,13 +29,17 @@ import javax.swing.text.*;
  *  of a JScrollPane.
  */
 public final class TextLineNumber extends JPanel
-	implements CaretListener, DocumentListener, PropertyChangeListener
-{
+	implements CaretListener, DocumentListener, PropertyChangeListener{
 	public final static float LEFT = 0.0f;
 	public final static float CENTER = 0.5f;
 	public final static float RIGHT = 1.0f;
+        
+        final static Color DIVISOR = new Color(30, 30, 30);
+        final static Color NUMEROS = new Color(90, 90, 90);
+        final static Color NUMEROACTUAL = Color.WHITE;
+        final static Color FONDO = new Color(30, 30, 30);
 
-	private final static Border OUTER = new MatteBorder(0, 0, 0, 2, Color.GRAY);
+	private final static Border OUTER = new MatteBorder(0, 0, 0, 2, DIVISOR);
 
 	private final static int HEIGHTT = Integer.MAX_VALUE - 1000000;
 
@@ -50,15 +54,15 @@ public final class TextLineNumber extends JPanel
 	private Color currentLineForeground;
 	private float digitAlignment;
 	private int minimumDisplayDigits;
-
+        
 	//  Keep history information to reduce the number of times the component
 	//  needs to be repainted
 
-    private int lastDigits;
-    private int lastHeight;
-    private int lastLine;
-    
-    private int px,py;
+        private int lastDigits;
+        private int lastHeight;
+        private int lastLine;
+
+        private int px,py;
 
 	private HashMap<String, FontMetrics> fonts;
 
@@ -87,7 +91,8 @@ public final class TextLineNumber extends JPanel
 		setFont( component.getFont() );
 
 		setBorderGap( 5 );
-		setCurrentLineForeground( Color.RED );
+		setCurrentLineForeground(NUMEROACTUAL);
+                setBackground(FONDO);
 		setDigitAlignment( RIGHT );
 		setMinimumDisplayDigits( minimumDisplayDigits );
 
@@ -262,11 +267,14 @@ public final class TextLineNumber extends JPanel
 		while (rowStartOffset <= endOffset)
 		{
 			try
-            {
+                    {
     			if (isCurrentLine(rowStartOffset))
     				g.setColor( getCurrentLineForeground() );
-    			else
-    				g.setColor( getForeground() );
+                        else{
+                            //g.setColor( getForeground() );
+                            //g.setColor(new Color(90, 90, 90));
+                            g.setColor(NUMEROS);
+                        }
 
     			//  Get the line number as a string and then determine the
     			//  "X" and "Y" offsets for drawing the string.

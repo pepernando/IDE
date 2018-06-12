@@ -7,7 +7,8 @@ class ControlToken
   end
 
   def addToken(linea,columna,tipo,contenido)
-    @arrayTokens << Token.new(linea, columna, tipo, contenido)
+    t = Token.new(linea, columna, tipo, contenido)
+    @arrayTokens << t
   end
 
   def getToken(i)

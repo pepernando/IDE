@@ -233,6 +233,7 @@ public class Ventana extends javax.swing.JFrame {
         jTextPaneCode.setFont(new java.awt.Font("Inconsolata", 1, 14)); // NOI18N
         jTextPaneCode.setForeground(new java.awt.Color(255, 255, 255));
         jTextPaneCode.setCaretColor(new java.awt.Color(255, 255, 255));
+        jTextPaneCode.setMinimumSize(new java.awt.Dimension(500, 21));
         jTextPaneCode.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 jTextPaneCodeCaretUpdate(evt);
@@ -533,7 +534,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonAbrirActionPerformed
 
     private void jButtonEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEjecutarActionPerformed
-        textoaArbol();
+        textoaArbol("Arbol.txt");
     }//GEN-LAST:event_jButtonEjecutarActionPerformed
 
     private void jButtonCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCompilarActionPerformed
@@ -719,7 +720,7 @@ public class Ventana extends javax.swing.JFrame {
     
     public void compilar() throws IOException, InterruptedException {
         String cadaux = "";
-        String caderr = "Errores Lexicos:\n";
+        String caderr = "";
         guardar();
         
         
@@ -738,53 +739,44 @@ public class Ventana extends javax.swing.JFrame {
             p.waitFor();
             //p = Runtime.getRuntime().exec("ruby Lexico.rb "+ ruta);
             try (BufferedReader br = new BufferedReader(new FileReader("Tokens.txt"))) {
-            String sCurrentLine;
-            while ((sCurrentLine = br.readLine()) != null) {
-                    String[] lineaAux = sCurrentLine.split("\\|");
-                    model.addRow(new Object[]{lineaAux[0],lineaAux[1],lineaAux[2],lineaAux[3]});
-                    System.out.println(sCurrentLine);
-                    cadaux += sCurrentLine + "\n";
-            }
-                System.out.println("Yas");
-                System.out.println(cadaux);
+                String sCurrentLine;
+                while ((sCurrentLine = br.readLine()) != null) {
+                        String[] lineaAux = sCurrentLine.split("\\|");
+                        model.addRow(new Object[]{lineaAux[0],lineaAux[1],lineaAux[2],lineaAux[3]});
+                        cadaux += sCurrentLine + "\n";
+                }
+                p.waitFor();
+                sintactico();
             } catch (IOException e) {
                     System.out.println("Error Lectura de Tokens");
             }
+            
+            caderr = "Errores Lexicos \n" + leerArchivo("Errores.txt");
+            
+            caderr += "\n Errores Sintacticos \n" + leerArchivo("ErroresS.txt");
         }
-        
-        
-
-        
-        //String[] aux = cadaux.split("\n");
-
-//        DefaultTableModel model = (DefaultTableModel) jTableLexico.getModel();
-//        
-//        for (String aux1 : aux) {
-//            linea = aux1;
-//            String[] lineaAux = linea.split(" ");
-//            model.addRow(new Object[]{lineaAux[1],lineaAux[2],lineaAux[3],lineaAux[4]});
-//        }
-        
+     
         jTextAreaTokens.setText(cadaux);
         jTextPaneErrores.setText(caderr);
     }
     
-    private void textoaArbol(){
+    @SuppressWarnings("unchecked")
+    private void textoaArbol(String ruta){
         
         root = new DefaultMutableTreeNode("raiz");
         modelo = new DefaultTreeModel(root);
         jTreeArbol.setModel(modelo);
         try {
-                String archivo = "src/txtFiles/Tree.txt";
                 String cadena;
-                FileReader f = new FileReader(archivo);
+                FileReader f = new FileReader(ruta);
                 try (BufferedReader b = new BufferedReader(f)) {
                     Queue<String> cola = new LinkedList();
                     while ((cadena = b.readLine()) != null) {
                         cola.add(cadena);
                     }
-                cadenilla(cola, root, 0, 0, modelo);
-            }
+                    cadenilla(cola, root, 0, 0, modelo);
+                    expandAllNodes(jTreeArbol,0,0);
+                }
             } catch (IOException e) {
                 //Salida.setText(Salida.getText() + "\n\t" + e.toString());
                 System.out.println("Error en el arbol");
@@ -834,7 +826,7 @@ public class Ventana extends javax.swing.JFrame {
         }
     }
     
-    void vaciarTablaTokens(DefaultTableModel dtm){
+    private void vaciarTablaTokens(DefaultTableModel dtm){
         int rowCount = dtm.getRowCount();
         //Remove rows one by one from the end of the table
         for (int i = rowCount - 1; i >= 0; i--) {
@@ -842,6 +834,34 @@ public class Ventana extends javax.swing.JFrame {
         }
     }
     
+    private String leerArchivo(String rutaleer){
+        String cadaux = "";
+        try (BufferedReader br = new BufferedReader(new FileReader(rutaleer))) {
+            String sCurrentLine;
+            while ((sCurrentLine = br.readLine()) != null) {
+                cadaux += sCurrentLine + "\n";
+            }
+        } catch (IOException e) {
+                System.out.println("Error Lectura de " + ruta);
+        }
+        return cadaux;
+    }
+    
+    private void sintactico() throws InterruptedException {
+        if (!"".equals(jTextPaneCode.getText())) {
+            Process p = null;
+            try {
+                p = Runtime.getRuntime().exec("ruby Sintactico.rb "+ ruta);
+                p.waitFor();
+                textoaArbol("Arbol.txt");
+            } catch (IOException ex) {
+                System.out.println("Error al Ejecutar Script Sintactico");
+                Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //p.waitFor();
+            //p = Runtime."Arbol.txt"Runtime().exec("ruby Lexico.rb "+ ruta);
+        } 
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAbrir;

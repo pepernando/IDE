@@ -319,9 +319,9 @@ while cadsize > puntero
 end
 #Fin del Automata
 
-#cterrores.getallTokens
+cterrores.getallTokens
 
-#ct.getallTokens
+ct.getallTokens
 
 File.open("Errores.txt",'w') {|f| f.write(cterrores.getallTokensString)}
 File.open("Tokens.txt",'w') {|f| f.write(ct.getallTokensFormated)}

@@ -1,0 +1,140 @@
+Consumuio el siguiente token Asignacion en 4 8
+Token inseperado era el siguiente Entero en 4 8
+Consumuio el siguiente token Asignacion en 5 5
+Token inseperado era el siguiente Decimal en 5 5
+Consumuio el siguiente token Asignacion en 6 5
+Token inseperado era el siguiente Entero en 6 5
+Consumuio el siguiente token Asignacion en 7 5
+Token inseperado era el siguiente Entero en 7 5
+Token inseperado era el siguiente Suma en 7 6
+Token inseperado era el siguiente Entero en 7 7
+Token inseperado era el siguiente Resta en 7 8
+Token inseperado era el siguiente Entero en 7 9
+Consumuio el siguiente token Suma en 8 7
+Token inseperado era el siguiente Entero en 8 7
+Consumuio el siguiente token Suma en 9 7
+Token inseperado era el siguiente Entero en 9 7
+Consumuio el siguiente token Asignacion en 10 5
+Token inseperado era el siguiente Decimal en 10 5
+Token inseperado era el siguiente Suma en 10 9
+Token inseperado era el siguiente Entero en 10 10
+Token inseperado era el siguiente Resta en 10 11
+Token inseperado era el siguiente Entero en 10 12
+Token inseperado era el siguiente Division en 10 13
+Token inseperado era el siguiente Entero en 10 14
+Token inseperado era el siguiente Multiplicacion en 10 15
+Token inseperado era el siguiente Entero en 10 16
+Token inseperado era el siguiente Suma en 10 17
+Token inseperado era el siguiente Entero en 10 18
+Token inseperado era el siguiente Resta en 10 20
+Token inseperado era el siguiente Entero en 10 21
+Consumuio el siguiente token ParentesisAbre en 11 6
+Token inseperado era el siguiente Entero en 11 6
+Token inseperado era el siguiente Resta en 11 7
+Token inseperado era el siguiente Entero en 11 8
+Token inseperado era el siguiente ParentesisCierra en 11 9
+Token inseperado era el siguiente Multiplicacion en 11 10
+Token inseperado era el siguiente ParentesisAbre en 11 11
+Token inseperado era el siguiente Entero en 11 12
+Token inseperado era el siguiente Division en 11 13
+Token inseperado era el siguiente Entero en 11 14
+Token inseperado era el siguiente ParentesisCierra en 11 15
+Consumuio el siguiente token Asignacion en 12 5
+Token inseperado era el siguiente Entero en 12 5
+Token inseperado era el siguiente Suma en 12 6
+Token inseperado era el siguiente Entero en 12 7
+Token inseperado era el siguiente Resta en 12 8
+Token inseperado era el siguiente Entero en 12 9
+Token inseperado era el siguiente Multiplicacion en 12 10
+Token inseperado era el siguiente Entero en 12 11
+Token inseperado era el siguiente Division en 12 12
+Token inseperado era el siguiente Entero en 12 13
+Token inseperado era el siguiente Resta en 12 14
+Token inseperado era el siguiente Entero en 12 15
+Consumuio el siguiente token Asignacion en 13 5
+Token inseperado era el siguiente Entero en 13 5
+Token inseperado era el siguiente Division en 13 6
+Token inseperado era el siguiente Entero en 13 7
+Token inseperado era el siguiente Suma en 13 8
+Token inseperado era el siguiente Entero en 13 9
+Token inseperado era el siguiente Multiplicacion en 13 11
+Token inseperado era el siguiente Entero en 13 12
+Consumuio el siguiente token Asignacion en 14 5
+Token inseperado era el siguiente Decimal en 14 5
+Consumuio el siguiente token Asignacion en 15 5
+Token inseperado era el siguiente Entero en 15 5
+Token inseperado era el siguiente Residuo en 15 7
+Token inseperado era el siguiente Entero en 15 8
+Consumuio el siguiente token ParentesisAbre en 16 6
+Token inseperado era el siguiente Entero en 16 6
+Token inseperado era el siguiente Mayor en 16 7
+Token inseperado era el siguiente Entero en 16 8
+Token inseperado era el siguiente ParentesisCierra en 16 9
+Token inseperado era el siguiente Then en 16 11
+Consumuio el siguiente token Identificador en 17 11
+Consumuio el siguiente token Suma en 17 14
+Token inseperado era el siguiente Entero en 17 14
+Token inseperado era el siguiente Else en 18 5
+Consumuio el siguiente token ParentesisAbre en 19 10
+Token inseperado era el siguiente Entero en 19 10
+Token inseperado era el siguiente Mayor en 19 11
+Token inseperado era el siguiente Entero en 19 12
+Token inseperado era el siguiente ParentesisCierra en 19 13
+Token inseperado era el siguiente Then en 19 15
+Consumuio el siguiente token Identificador en 20 17
+Token inseperado era el siguiente Decimal en 20 17
+Token inseperado era el siguiente Else en 21 8
+Consumuio el siguiente token Identificador en 22 14
+Token inseperado era el siguiente Decimal en 22 14
+Consumuio el siguiente token Identificador en 23 12
+Consumuio el siguiente token Suma en 23 16
+Token inseperado era el siguiente Entero en 23 16
+Consumuio el siguiente token Asignacion en 26 5
+Token inseperado era el siguiente Entero en 26 5
+Token inseperado era el siguiente Suma en 26 6
+Token inseperado era el siguiente Entero en 26 7
+Consumuio el siguiente token Identificador en 28 8
+Consumuio el siguiente token Suma en 28 13
+Token inseperado era el siguiente Entero en 28 13
+Token inseperado era el siguiente ParentesisCierra en 28 14
+Token inseperado era el siguiente Multiplicacion en 28 15
+Token inseperado era el siguiente Entero en 28 17
+Token inseperado era el siguiente Suma en 28 19
+Token inseperado era el siguiente Entero en 28 21
+Consumuio el siguiente token Mayor en 29 17
+Token inseperado era el siguiente Entero en 29 17
+Token inseperado era el siguiente ParentesisCierra en 29 18
+Consumuio el siguiente token Identificador en 30 9
+Token inseperado era el siguiente Entero en 30 9
+Token inseperado era el siguiente Suma en 30 11
+Token inseperado era el siguiente Entero en 30 13
+Token inseperado era el siguiente Division en 30 15
+Token inseperado era el siguiente Entero en 30 17
+Token inseperado era el siguiente Multiplicacion en 30 19
+Token inseperado era el siguiente Entero en 30 21
+Token inseperado era el siguiente Division en 30 23
+Token inseperado era el siguiente Entero en 30 25
+Consumuio el siguiente token Write en 31 13
+Consumuio el siguiente token Identificador en 31 14
+Consumuio el siguiente token Identificador en 32 11
+Token inseperado era el siguiente Entero en 32 11
+Token inseperado era el siguiente Division en 32 13
+Token inseperado era el siguiente Entero en 32 14
+Token inseperado era el siguiente Until en 35 3
+Token inseperado era el siguiente ParentesisAbre en 35 8
+Consumuio el siguiente token Identificador en 35 9
+Consumuio el siguiente token Comparacion en 35 12
+Token inseperado era el siguiente Entero en 35 12
+Token inseperado era el siguiente ParentesisCierra en 35 13
+Consumuio el siguiente token Comparacion en 36 12
+Token inseperado era el siguiente Entero en 36 12
+Token inseperado era el siguiente ParentesisCierra en 36 13
+Consumuio el siguiente token Cadena en 38 22
+Consumuio el siguiente token Identificador en 38 23
+Consumuio el siguiente token Write en 39 12
+Token inseperado era el siguiente Entero en 39 12
+Token inseperado era el siguiente Residuo en 39 13
+Token inseperado era el siguiente Entero en 39 14
+Token inseperado era el siguiente Suma en 39 15
+Token inseperado era el siguiente Entero en 39 16
+Error, token no esperado es ;

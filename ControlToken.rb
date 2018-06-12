@@ -1,4 +1,4 @@
-require_relative 'token'
+require_relative 'Token'
 
 class ControlToken
   def initialize

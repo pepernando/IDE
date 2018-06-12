@@ -1,5 +1,6 @@
 class Nodo
-    def initialize()
+
+    def initialize
         @hijos =[]
         @hermano
         @linea=0
@@ -7,18 +8,23 @@ class Nodo
         @valor
     end
 
-    def getType()
+    # def initialize(tipo,valor)
+    #     @hijos =[]
+    #     @hermano
+    #     @linea=0
+    #     @tipo = tipo
+    #     @valor = valor
+    # end
+
+    def getType
         return @tipo
     end
-
-    def getValor()
+    def getValor
         return @valor
     end
-
     def agHij(nHijo)
         @hijos[@hijos.length]=nHijo
     end
-
     def agFam(herm)
         @hermano=herm
     end
@@ -28,29 +34,32 @@ class Nodo
     def setType(tipo)
         @tipo=tipo
     end
-
     def setLinea(lin)
         @linea=lin
     end
 
-    def imp()
+    def prin
+        print "#{@tipo}"
+    end
+
+    def imp
         a=0
-        while (a<@linea) do
-            print "\t"
+        while (a<@linea) do 
+            print "\t" 
             a+=1
         end
         print "[#{@tipo},#{@valor}]\n"
         a=0
         #print "[#{@hijos.length}]"
         while (a<@hijos.length) do
-           if @hijos[a]!=nil
-            @hijos[a].imp()
+           if @hijos[a]!=nil 
+            @hijos[a].imp
            end
            a+=1
         end
         if (@hermano != nil)
             #print "hermano #{@hermano.getType}\n"
-            @hermano.imp()
+            @hermano.imp
         end
     end
     def realinea (lv)
@@ -61,17 +70,18 @@ class Nodo
                 @hijos[a].realinea(lv+1)
             end
             a+=1
+
         end
         if (@hermano != nil)
             @hermano.realinea(lv)
         end
-    end
-
-    def texto ()tex=""
+    end 
+    def texto 
+        tex=""
         if @tipo !=nil
         a=0
-        while (a<@linea) do
-            tex += "\t"
+        while (a<@linea) do 
+            tex += "\t" 
             a+=1
         end
         tex +="#{@valor}\n"
@@ -79,19 +89,16 @@ class Nodo
         #print "[#{@hijos.length}]"
         while (a<@hijos.length) do
            if @hijos[a] != nil
-            tex +="#{@hijos[a].texto()}"
+            tex +="#{@hijos[a].texto}"
            end
            a+=1
         end
         if (@hermano != nil)
             #print "hermano #{@hermano.getType}\n"
-            tex +="#{@hermano.texto()}"
+            tex +="#{@hermano.texto}"
         end
-
+        
         end
         return tex
-
     end
-
-
 end

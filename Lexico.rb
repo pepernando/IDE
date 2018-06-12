@@ -1,4 +1,4 @@
-require_relative 'control_token'
+require_relative 'ControlToken'
 
 ct = ControlToken.new #es una clase para manejar mis tokens
 cterrores = ControlToken.new
@@ -135,7 +135,7 @@ while cadsize > puntero
     end
   when estados[:suma]
     if cadena[puntero] == '+'
-      ct.addToken(linea,columna,"Incremeno",'++')
+      ct.addToken(linea,columna,"Incremento",'++')
       estadoActual = estados[:inicio]
     else
       puntero-=1
@@ -224,14 +224,7 @@ while cadsize > puntero
       colaux = columna - contentToken.length
       puntero-=1
       columna-=1
-      #bandtemp = false
       
-      #palabrasResesrvadas.each{|actual|
-      #  if actual == contentToken
-      #    bandtemp = true
-      #  end
-      #}
-
       if palabrasResesrvadas.include?(contentToken)
         ct.addToken(linea,colaux, contentToken.capitalize ,contentToken)
       else
@@ -326,7 +319,4 @@ ct.getallTokens
 File.open("Errores.txt",'w') {|f| f.write(cterrores.getallTokensString)}
 File.open("Tokens.txt",'w') {|f| f.write(ct.getallTokensFormated)}
 
-puts "Todo Correcto"
-
-#File.open("../txtFiles/errores.txt",'w') {|f| f.write(cterrores.getallTokensString) }
-#File.open("../txtFiles/styleddoc.txt",'w') {|f| f.write(styleddoc) }
+puts "Todo Correcto Lexico"

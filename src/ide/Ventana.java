@@ -7,7 +7,6 @@ package ide;
 
 import java.awt.Color;
 import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -858,8 +857,6 @@ public class Ventana extends javax.swing.JFrame {
                 System.out.println("Error al Ejecutar Script Sintactico");
                 Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //p.waitFor();
-            //p = Runtime."Arbol.txt"Runtime().exec("ruby Lexico.rb "+ ruta);
         } 
     }
 

@@ -25,12 +25,12 @@ class Sintactico
         if(@arrayTokens[@punteroToken] != nil)
             if(simbol == @arrayTokens[@punteroToken].returnTipo)
                 node = Nodo.new
-                node.setType(simbol)
+                node.setTipoNodo(simbol)
                 node.setValor(@arrayTokens[@punteroToken].returnContenido)
                 @punteroToken+=1
                 return node
             else
-                @arrayErrores[@punteroError]="Consumio el siguiente token #{@arrayTokens[@punteroToken].returnContenido} en #{@arrayTokens[@punteroToken-1].returnUbicacion}\n"
+                @arrayErrores[@punteroError]="Token Consumido #{@arrayTokens[@punteroToken].returnContenido} en #{@arrayTokens[@punteroToken-1].returnUbicacion}\n"
                 @punteroError+=1
                 return Nodo.new
             end
@@ -49,27 +49,32 @@ class Sintactico
         end
     end
 
-    def imprimirErrores
-        #@arrayErrores.uniq! #este elimina los duplicados
+    def returnErrores
+        cadaux = ""
+        @arrayErrores.uniq! #este elimina los duplicados
         @arrayErrores.each{ |actual| #solo itera el array y lo imprime
-            puts actual
+            cadaux += actual
         }
+        return cadaux
     end
 
-    def ret
-        return @nodoRaiz.texto
+    def returnArbolTexto
+        return @nodoRaiz.texto(0)
+    end
+
+    def imp
+        @nodoRaiz.imp
     end
 
     #Programa -> main { lista-declaración lista-sentencia }
     def programa
         raiz=Nodo.new
-        raiz.setType("Main")
+        raiz.setTipoNodo("Main")
         auxil=match("Main")
         if auxil != nil
-            auxil.setLinea(0)
             @nodoRaiz=auxil
         else
-            @arrayErrores[@punteroError]="Error token que estaba esperando es  \"main\" #{@auxiliarTexto}"
+            @arrayErrores[@punteroError]="El token esperado era Main #{@auxiliarTexto}"
             @punteroError+=1
             while (@arrayTokens[@punteroToken].returnTipo != "LlaveAbre") do @punteroToken+=1 end
 
@@ -78,7 +83,7 @@ class Sintactico
         if auxil == nil
             @punteroError+=1
         end
-        auxil=listaDeclaracion(2)
+        auxil=listaDeclaracion
         if auxil != nil
             a=0
             while a<auxil.length do
@@ -86,7 +91,7 @@ class Sintactico
                 a+=1
             end
         end
-        auxil=listaSentencias(2)
+        auxil=listaSentencias
         if auxil != nil
             a=0
             while a<auxil.length do
@@ -96,18 +101,17 @@ class Sintactico
         end
         auxil=match("LlaveCierra")
         if auxil == nil
-            @arrayErrores[@punteroError]= "Error token que estaba esperando es \"}\" #{@auxiliarTexto}\n"
+            @arrayErrores[@punteroError]= "Token esperado era } #{@auxiliarTexto}\n"
             @punteroError+=1
         end
-        @nodoRaiz.realinea(0)
     end
 
     # lista-declaración -> { declaración ; }
-    def listaDeclaracion(lv)
+    def listaDeclaracion
         ligram=[]
         ban=0
         while( nodoExiste && (@arrayTokens[@punteroToken].returnTipo == "Integer" ||@arrayTokens[@punteroToken].returnTipo == "Bool" || @arrayTokens[@punteroToken].returnTipo == "Float")  ) do
-            ligram[ban]=declaracion(lv+1)
+            ligram[ban]=declaracion
             auxil=match("PuntoyComa")
             ban+=1
         end
@@ -119,20 +123,19 @@ class Sintactico
     end
 
     # declaración → tipo lista-variables
-    def declaracion(lv)
-        dec = tipo(lv+1)
-        lisvar = listaVariables(lv+1)
+    def declaracion
+        dec = tipo
+        lisvar = listaVariables
         a=0
         while a<lisvar.length do
             dec.agHij(lisvar[a])
             a+=1
         end
-        dec.setLinea(lv)
         return dec
     end
 
     #tipo → integer | float | bool
-    def tipo(lv)
+    def tipo
         axVal = Nodo.new
         case @arrayTokens[@punteroToken].returnTipo
         when "Integer"
@@ -142,16 +145,15 @@ class Sintactico
         when "Bool"
             axVal=match("Bool")
         end
-        axVal.setLinea(lv)
         return axVal
     end
 
     #lista-sentencia -> { sentencia }
-    def listaSentencias(lv)
+    def listaSentencias
         liSen=[]
         ban=0
         while  nodoExiste && @arrayTokens[@punteroToken].returnTipo != "LlaveCierra" do
-            auxil=sentencia(lv+1)
+            auxil=sentencia
             liSen[ban]=auxil
             ban+=1
         end
@@ -163,7 +165,7 @@ class Sintactico
     end
 
     #lista-variables -> identificador [ , identificador ]
-    def listaVariables(lv)
+    def listaVariables
         lisAx=[]
         a=0
         lisAx[0]=match("Identificador")
@@ -177,27 +179,27 @@ class Sintactico
     end
 
     #sentencia → selección | iteración | repetición | sent-read |sent-write | bloque | asignación
-    def sentencia(lv)
+    def sentencia
         aux=Nodo.new
         case @arrayTokens[@punteroToken].returnTipo
         when "LlaveAbre"
-            aux=bloque(lv+1)
+            aux=bloque
         when "If"
-            aux=seleccion(lv+1)
+            aux=seleccion
         when "Do"
-            aux=repeti(lv+1)
+            aux=repeti
         when "While"
-            aux=itera(lv+1)
+            aux=itera
         when "Read"
-            aux=sentRead(lv+1)
+            aux=sentRead
         when "Write"
-            aux=sentWrite(lv+1)
+            aux=sentWrite
         when "Identificador"
-            aux=asignacion(lv+1)
+            aux=asignacion
         when "PuntoyComa"
             @punteroToken+=1
         else
-            @arrayErrores[@punteroError]="Token inseperado era el siguiente  #{@arrayTokens[@punteroToken].returnContenido} en #{@arrayTokens[@punteroToken-1].returnUbicacion}\n"
+            @arrayErrores[@punteroError]="El token que se esperaba #{@arrayTokens[@punteroToken].returnContenido} en #{@arrayTokens[@punteroToken-1].returnUbicacion}\n"
             @punteroError+=1
             @punteroToken+=1
         end
@@ -205,70 +207,66 @@ class Sintactico
     end
 
     #bloque -> { lista-sentencia }
-    def bloque(lv)
-        axBlo=Nodo.new
-        axBlo.setLinea(lv)
-        axBlo.setType('5')
-        axBlo.setValor('BloqueSen')
-        aux=match("LlaveAbre")
-        auxil=listaSentencias(lv+1)
+    def bloque
+        nodoAux = Nodo.new
+        nodoAux.setTipoNodo('4')
+        nodoAux.setValor('BloqueSen')
+        match("LlaveAbre")
+        auxil=listaSentencias
         if auxil != nil
             a=0
             while a<auxil.length do
-                axBlo.agHij(auxil[a])
+                nodoAux.agHij(auxil[a])
                 a+=1
             end
         end
         match("LlaveCierra")
-        return axBlo
+        return nodoAux
     end
 
     #seleccion -> if ( expresion ) then bloque [ else bloque ]
-    def seleccion(lv)
+    def seleccion
         axSel=match("If")
-        axSel.setLinea(lv)
         match("ParentesisAbre")
-        aux=expresion(lv+1)
+        aux=expresion
         axSel.agHij(aux)
         match("ParentesisCierra")
         match("Then")
-        aux=bloque(lv+1)
+        aux=bloque
         axSel.agHij(aux)
         if(nodoExiste && @arrayTokens[@punteroToken].returnTipo == "Else")
             els=match("Else")
-            els.setLinea(lv)
             axSel.agHij(els)
-            aux=bloque(lv+1)
+            aux=bloque
             els.agHij(aux)
         end
         return axSel
     end
 
     #asignación → identificador := expresión ;
-    def asignacion(lv)
+    def asignacion
         aux=match("Identificador")
-        aux.setLinea(lv+1)
         if @arrayTokens[@punteroToken].returnTipo =="Incremento" || @arrayTokens[@punteroToken].returnTipo=="Decremento"
             axA=nil
             if @arrayTokens[@punteroToken].returnTipo =="Incremento"
                 axA=Nodo.new
-                axA.setType("Suma")
+                axA.setTipoNodo("Suma")
                 axA.setValor("+")
             elsif @arrayTokens[@punteroToken].returnTipo =="Decremento"
                 axA=Nodo.new
-                axA.setType("Resta")
+                axA.setTipoNodo("Resta")
                 axA.setValor("-")
             end
             aux2=Nodo.new
-            aux2.setType("TokenInicial")
+            aux2.setTipoNodo("TokenInicial")
             aux2.setValor('1')
             a=Nodo.new
-            a.setType(aux.getType)
+            a.setTipoNodo(aux.getTipoNodo)
             a.setValor(aux.getValor)
             axA.agHij(a)
             axA.agHij(aux2)
             axAsi=Nodo.new
-            axAsi.setType("Asignacion")
+            axAsi.setTipoNodo("Asignacion")
             axAsi.setValor(":=")
             axAsi.agHij(aux)
             axAsi.agHij(axA)
@@ -277,24 +275,22 @@ class Sintactico
             return axAsi
         end
         axAsi=match("Asignacion")
-        aux.setLinea(lv)
         axAsi.agHij(aux)
-        aux=expresion(lv+1)
+        aux=expresion
         axAsi.agHij(aux)
         match("PuntoyComa")
         return axAsi
     end
 
     #repetición → do bloque until ( expresión ) ;
-    def repeti(lv)
+    def repeti()
         axRep=match("Do")
-        axRep.setLinea(lv)
-        aux=bloque(lv+1)
+        aux=bloque
         axRep.agHij(aux)
         util=match("Until")
         axRep.agFam(util)
         match("ParentesisAbre")
-        aux=expresion(lv+1)
+        aux=expresion
         util.agHij(aux)
         match("ParentesisCierra")
         match("PuntoyComa")
@@ -302,39 +298,34 @@ class Sintactico
     end
 
     #iteración → while ( expresión ) bloque
-    def itera(lv)
+    def itera
         axIte=match("While")
-        axIte.setLinea(lv)
         match("ParentesisAbre")
-        aux=expresion(lv+1)
+        aux=expresion
         axIte.agHij(aux)
         match("ParentesisCierra")
-        aux=bloque(lv+1)
+        aux=bloque
         axIte.agHij(aux)
         return axIte
     end
 
     #sent-read → read identificador ;
-    def sentRead(lv)
+    def sentRead
         axSr=match("Read")
-        axSr.setLinea(lv)
         aux=match("Identificador")
-        aux.setLinea(lv+1)
         axSr.agHij(aux)
         match("PuntoyComa")
         return axSr
     end
 
     #sent-write → write cadena, expression;|write cadena ;
-    def sentWrite(lv)
+    def sentWrite
         axSw=match("Write")
-        axSw.setLinea(lv)
         aux=match("Cadena")
-        aux.setLinea(lv+1)
         axSw.agHij(aux)
         if nodoExiste && @arrayTokens[@punteroToken].returnTipo == "Coma"
             match("Coma")
-            aux=expresion(lv+1)
+            aux=expresion
             axSw.agHij(aux)
         end
         match("PuntoyComa")
@@ -342,40 +333,40 @@ class Sintactico
     end
 
     #expresión -> expresion-simple [ relación expresion-simple ]
-    def expresion(lv)
-        axExp=expresionSimple(lv)
+    def expresion
+        axExp=expresionSimple
         if nodoExiste && (@arrayTokens[@punteroToken].returnTipo == "MayorIgual" || @arrayTokens[@punteroToken].returnTipo == "Mayor" || @arrayTokens[@punteroToken].returnTipo == "Menor" || @arrayTokens[@punteroToken].returnTipo == "MenorIgual"  || @arrayTokens[@punteroToken].returnTipo == "Comparacion"  || @arrayTokens[@punteroToken].returnTipo == "DiferenteDe")        # si el token  sguiente estan en el rango realcional entonces es una expsim rel expsim
-            aux=relacion(lv+1)
+            aux=relacion
             auEx=axExp
             axExp=aux
             axExp.agHij(auEx)
-            aux=expresionSimple(lv+1)
+            aux=expresionSimple
             axExp.agHij(aux)
         end
         return axExp
     end
 
     #expresion-simple -> termino { suma-op termino }
-    def expresionSimple(lv)
-        axEsim=termino(lv)
+    def expresionSimple
+        axEsim=termino
         while nodoExiste &&  (@arrayTokens[@punteroToken].returnTipo == "Suma" || @arrayTokens[@punteroToken].returnTipo == "Resta" || @arrayTokens[@punteroToken].returnTipo == "Incremento" || @arrayTokens[@punteroToken].returnTipo =="Decremento") do       # si mi siguiente token se encuentra entre en 22 y 25 se cicla
             auxS=axEsim
-            axEsim=sumaop(lv)
+            axEsim=sumaop
             axEsim.agHij(auxS)
-            aux2=termino(lv+1)
+            aux2=termino
             axEsim.agHij(aux2)
         end
         return axEsim
     end
 
     #termino -> factor { mult-op factor }
-    def termino(lv)
-        axTer=factor(lv)
+    def termino
+        axTer=factor
         while nodoExiste && (@arrayTokens[@punteroToken].returnTipo == "Multiplicacion" || @arrayTokens[@punteroToken].returnTipo == "Division" || @arrayTokens[@punteroToken].returnTipo == "Residuo")
             auxT=axTer
-            axTer=mulop(lv)
+            axTer=mulop
             axTer.agHij(auxT)
-            aux2=factor(lv+1)
+            aux2=factor
 
             axTer.agHij(aux2)
         end
@@ -383,25 +374,22 @@ class Sintactico
     end
 
     #factor → ( expresión ) | numero | identificador
-    def factor(lv)
+    def factor
         if nodoExiste
             case  @arrayTokens[@punteroToken].returnTipo
             when "ParentesisAbre"
                 match("ParentesisAbre")
-                axFac=expresion(lv+1)
+                axFac=expresion
                 match("ParentesisCierra")
             when "Entero"
                 axFac=match("Entero")
-                axFac.setLinea(lv+1)
             when "Decimal"
                 axFac=match("Decimal")
-                axFac.setLinea(lv+1)
             when "Identificador"
                 axFac=match("Identificador")
-                axFac.setLinea(lv+1)
             end
         else
-            @arrayErrores[@punteroError]="Error token no esperado es ;\n"
+            @arrayErrores[@punteroError]="No se eperaba el siguiente ;\n"
             @punteroError+=1
             @punteroToken+=1
         end
@@ -409,7 +397,7 @@ class Sintactico
     end
 
     #relacion → <= | < | > | >= | == | !=
-    def relacion(lv)
+    def relacion
         case @arrayTokens[@punteroToken].returnTipo
         when "MenorIgual"
             axRel=match("MenorIgual")
@@ -424,12 +412,11 @@ class Sintactico
         when "DiferenteDe"
             axRel=match("DiferenteDe")
         end
-        axRel.setLinea(lv)
         return axRel
     end
 
     #suma-op → + | - | ++ |--
-    def sumaop(lv)
+    def sumaop
         case @arrayTokens[@punteroToken].returnTipo
         when "Suma"
             axSumop=match("Suma")
@@ -440,12 +427,11 @@ class Sintactico
         when "Decremento"
             axSumop=match("Decremento")
         end
-        axSumop.setLinea(lv)
         return axSumop
     end
 
     #mult-op → * | / | %
-    def mulop(lv)
+    def mulop
         case @arrayTokens[@punteroToken].returnTipo
         when "Multiplicacion"
             axMulop=match("Multiplicacion")
@@ -454,7 +440,6 @@ class Sintactico
         when "Residuo"
             axMulop=match("Residuo")
         end
-        axMulop.setLinea(lv)
         return axMulop
     end
 end
@@ -462,7 +447,12 @@ end
 #iniciar el programa
 ct = ControlToken.new
 ct.llenarDesdeArchivo("Tokens.txt")
+
 sintactico = Sintactico.new(ct.getArray)
 sintactico.programa
-print "#{sintactico.ret}"
-sintactico.imprimirErrores
+
+puts "#{sintactico.returnArbolTexto}"
+puts "Errores \n#{sintactico.returnErrores}"
+
+File.open("Arbol.txt",'w') {|f| f.write(sintactico.returnArbolTexto)}
+File.open("ErroresS.txt",'w') {|f| f.write(sintactico.returnErrores)}

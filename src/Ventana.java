@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ide;
+
 
 import java.awt.Color;
 import java.awt.event.WindowEvent;
@@ -37,8 +37,6 @@ public class Ventana extends javax.swing.JFrame {
     private boolean p1, b2;
     private int rowNum, colNum;
     private String ruta;
-    private StyledDocument doc;
-    private Style style;
     private FileReader filereader;
     private Colorear c;
     private DefaultTreeModel modelo;
@@ -55,17 +53,12 @@ public class Ventana extends javax.swing.JFrame {
         //comentario
         tln = new TextLineNumber(jTextPaneCode);
         jScrollPane2.setRowHeaderView(tln);
-        style = jTextPaneCode.addStyle("Estilo", null);
         p1 = true;
         b2 = true;
         rowNum = colNum = 0;
         
-        ruta = "src/txtFiles/styleddoc.txt";
-        File f = new File(ruta);
-        f.createNewFile();
-        
-        doc = jTextPaneCode.getStyledDocument();
-        
+        ruta = "";
+   
         modelo = new DefaultTreeModel(root);
         root = null;
         
@@ -73,8 +66,7 @@ public class Ventana extends javax.swing.JFrame {
         c = new Colorear(jTextPaneCode);
         c.agregarellistener();
         
-        expcolap = false;
-        
+        expcolap = false;        
     }
 
     /**
@@ -710,13 +702,6 @@ public class Ventana extends javax.swing.JFrame {
         b2 = true;
     }
     
-    public void findRemplace(int ini, int fin, Color c) {
-        StyleConstants.setForeground(style, c);
-        int aux = fin - ini;
-        doc.setCharacterAttributes(ini, fin, style, true);
-    }
-
-    
     public void compilar() throws IOException, InterruptedException {
         String cadaux = "";
         String caderr = "";
@@ -752,7 +737,7 @@ public class Ventana extends javax.swing.JFrame {
             
             caderr = "Errores Lexicos \n" + leerArchivo("Errores.txt");
             
-            caderr += "\n Errores Sintacticos \n" + leerArchivo("ErroresS.txt");
+            caderr += "\nErrores Sintacticos \n" + leerArchivo("ErroresS.txt");
         }
      
         jTextAreaTokens.setText(cadaux);

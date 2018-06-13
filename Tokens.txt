@@ -148,7 +148,7 @@
 23|17|PuntoyComa|;
 23|18|LlaveCierra|}
 24|2|Identificador|a
-24|4|Incremeno|++
+24|4|Incremento|++
 24|5|PuntoyComa|;
 25|2|Identificador|c
 25|3|Decremento|--

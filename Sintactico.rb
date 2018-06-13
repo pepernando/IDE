@@ -112,7 +112,7 @@ class Sintactico
         ban=0
         while( nodoExiste && (@arrayTokens[@punteroToken].returnTipo == "Integer" ||@arrayTokens[@punteroToken].returnTipo == "Bool" || @arrayTokens[@punteroToken].returnTipo == "Float")  ) do
             ligram[ban]=declaracion
-            auxil=match("PuntoyComa")
+            match("PuntoyComa")
             ban+=1
         end
         if ban !=0
@@ -136,29 +136,29 @@ class Sintactico
 
     #tipo → integer | float | bool
     def tipo
-        axVal = Nodo.new
+        nodoAux = Nodo.new
         case @arrayTokens[@punteroToken].returnTipo
-        when "Integer"
-            axVal=match("Integer")
-        when "Float"
-            axVal=match("Float")
-        when "Bool"
-            axVal=match("Bool")
-        end
-        return axVal
+            when "Integer"
+                nodoAux=match("Integer")
+            when "Float"
+                nodoAux=match("Float")
+            when "Bool"
+                nodoAux=match("Bool")
+            end
+        return nodoAux
     end
 
     #lista-sentencia -> { sentencia }
     def listaSentencias
-        liSen=[]
-        ban=0
+        arraySentencias=[]
+        banderaAux=0
         while  nodoExiste && @arrayTokens[@punteroToken].returnTipo != "LlaveCierra" do
             auxil=sentencia
-            liSen[ban]=auxil
-            ban+=1
+            arraySentencias[banderaAux]=auxil
+            banderaAux+=1
         end
-        if ban !=0
-            return liSen
+        if banderaAux !=0
+            return arraySentencias
         else
             return nil
         end
@@ -166,32 +166,32 @@ class Sintactico
 
     #lista-variables -> identificador [ , identificador ]
     def listaVariables
-        lisAx=[]
-        a=0
-        lisAx[0]=match("Identificador")
-        a+=1
+        listaAux=[]
+        cont=0
+        listaAux[0]=match("Identificador")
+        cont+=1
         while (nodoExiste && @arrayTokens[@punteroToken].returnTipo == "Coma") do
-            ax=match("Coma")
-            lisAx[a]=match("Identificador")
-            a+=1
+            match("Coma")
+            listaAux[cont]=match("Identificador")
+            cont+=1
         end
-        return lisAx
+        return listaAux
     end
 
     #sentencia → selección | iteración | repetición | sent-read |sent-write | bloque | asignación
     def sentencia
         aux=Nodo.new
         case @arrayTokens[@punteroToken].returnTipo
+        when "Do"
+            aux=repeticion
+        when "While"
+            aux=iteracion
+        when "Read"
+            aux=sentRead
         when "LlaveAbre"
             aux=bloque
         when "If"
             aux=seleccion
-        when "Do"
-            aux=repeti
-        when "While"
-            aux=itera
-        when "Read"
-            aux=sentRead
         when "Write"
             aux=sentWrite
         when "Identificador"
@@ -283,7 +283,7 @@ class Sintactico
     end
 
     #repetición → do bloque until ( expresión ) ;
-    def repeti()
+    def repeticion
         axRep=match("Do")
         aux=bloque
         axRep.agHij(aux)
@@ -298,7 +298,7 @@ class Sintactico
     end
 
     #iteración → while ( expresión ) bloque
-    def itera
+    def iteracion
         axIte=match("While")
         match("ParentesisAbre")
         aux=expresion
@@ -351,7 +351,7 @@ class Sintactico
         axEsim=termino
         while nodoExiste &&  (@arrayTokens[@punteroToken].returnTipo == "Suma" || @arrayTokens[@punteroToken].returnTipo == "Resta" || @arrayTokens[@punteroToken].returnTipo == "Incremento" || @arrayTokens[@punteroToken].returnTipo =="Decremento") do       # si mi siguiente token se encuentra entre en 22 y 25 se cicla
             auxS=axEsim
-            axEsim=sumaop
+            axEsim=sumaOp
             axEsim.agHij(auxS)
             aux2=termino
             axEsim.agHij(aux2)
@@ -364,7 +364,7 @@ class Sintactico
         axTer=factor
         while nodoExiste && (@arrayTokens[@punteroToken].returnTipo == "Multiplicacion" || @arrayTokens[@punteroToken].returnTipo == "Division" || @arrayTokens[@punteroToken].returnTipo == "Residuo")
             auxT=axTer
-            axTer=mulop
+            axTer=multOp
             axTer.agHij(auxT)
             aux2=factor
 
@@ -416,7 +416,7 @@ class Sintactico
     end
 
     #suma-op → + | - | ++ |--
-    def sumaop
+    def sumaOp
         case @arrayTokens[@punteroToken].returnTipo
         when "Suma"
             axSumop=match("Suma")
@@ -431,7 +431,7 @@ class Sintactico
     end
 
     #mult-op → * | / | %
-    def mulop
+    def multOp
         case @arrayTokens[@punteroToken].returnTipo
         when "Multiplicacion"
             axMulop=match("Multiplicacion")

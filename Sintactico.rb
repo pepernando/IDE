@@ -1,3 +1,4 @@
+
 require_relative 'Nodo'
 require_relative 'Token'
 require_relative 'ControlToken'
@@ -42,7 +43,7 @@ class Sintactico
 
     #para reportar si los tokenns no se cargaron correctamente
     def nodoExiste
-        if @punteroToken<@arrayTokens.length
+        if (@punteroToken < @arrayTokens.length) then
             return true
         else
             return false
@@ -209,8 +210,8 @@ class Sintactico
     #bloque -> { lista-sentencia }
     def bloque
         nodoAux = Nodo.new
-        nodoAux.setTipoNodo('4')
-        nodoAux.setValor('BloqueSen')
+        nodoAux.setTipoNodo('noP')
+        nodoAux.setValor('bloque')
         match("LlaveAbre")
         auxil=listaSentencias
         if auxil != nil
@@ -247,39 +248,39 @@ class Sintactico
     def asignacion
         aux=match("Identificador")
         if @arrayTokens[@punteroToken].returnTipo =="Incremento" || @arrayTokens[@punteroToken].returnTipo=="Decremento"
-            axA=nil
+            auxArray=nil
             if @arrayTokens[@punteroToken].returnTipo =="Incremento"
-                axA=Nodo.new
-                axA.setTipoNodo("Suma")
-                axA.setValor("+")
+                auxArray=Nodo.new
+                auxArray.setTipoNodo("Suma")
+                auxArray.setValor("+")
             elsif @arrayTokens[@punteroToken].returnTipo =="Decremento"
-                axA=Nodo.new
-                axA.setTipoNodo("Resta")
-                axA.setValor("-")
+                auxArray=Nodo.new
+                auxArray.setTipoNodo("Resta")
+                auxArray.setValor("-")
             end
-            aux2=Nodo.new
-            aux2.setTipoNodo("TokenInicial")
-            aux2.setValor('1')
-            a=Nodo.new
-            a.setTipoNodo(aux.getTipoNodo)
-            a.setValor(aux.getValor)
-            axA.agHij(a)
-            axA.agHij(aux2)
-            axAsi=Nodo.new
-            axAsi.setTipoNodo("Asignacion")
-            axAsi.setValor(":=")
-            axAsi.agHij(aux)
-            axAsi.agHij(axA)
+            nodoAux=Nodo.new
+            nodoAux.setTipoNodo("TokenInicial")
+            nodoAux.setValor('1')
+            param=Nodo.new
+            param.setTipoNodo(aux.getTipoNodo)
+            param.setValor(aux.getValor)
+            auxArray.agHij(param)
+            auxArray.agHij(nodoAux)
+            nodoReturn=Nodo.new
+            nodoReturn.setTipoNodo("Asignacion")
+            nodoReturn.setValor(":=")
+            nodoReturn.agHij(aux)
+            nodoReturn.agHij(auxArray)
             @punteroToken+=1
             match("PuntoyComa")
-            return axAsi
+            return nodoReturn
         end
-        axAsi=match("Asignacion")
-        axAsi.agHij(aux)
+        nodoReturn=match("Asignacion")
+        nodoReturn.agHij(aux)
         aux=expresion
-        axAsi.agHij(aux)
+        nodoReturn.agHij(aux)
         match("PuntoyComa")
-        return axAsi
+        return nodoReturn
     end
 
     #repetición → do bloque until ( expresión ) ;
@@ -456,3 +457,5 @@ puts "Errores \n#{sintactico.returnErrores}"
 
 File.open("Arbol.txt",'w') {|f| f.write(sintactico.returnArbolTexto)}
 File.open("ErroresS.txt",'w') {|f| f.write(sintactico.returnErrores)}
+
+ct.printToken(3)

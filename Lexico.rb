@@ -55,7 +55,6 @@ estados = {
   :decimal => 17
 }
 
-
 estadoActual = estados[:inicio]
 
 #Inicio del Automata
@@ -207,8 +206,13 @@ while cadsize > puntero
     end
   when estados[:cadena]
     if cadena[puntero] == '"'
-      colaux = columna - contentToken.length
-      ct.addToken(lineainiaux,coliniaux,"Cadena",contentToken)
+      #colaux = columna - contentToken.length
+      if contentToken != ''
+        ct.addToken(lineainiaux,coliniaux,"Cadena",contentToken)
+      else #solo es para control , si la cadena no tiene nada , insertar espacio vacio
+        ct.addToken(lineainiaux,coliniaux,"Cadena",' ')
+      end
+
       estadoActual = estados[:inicio]
     elsif cadena[puntero] =~ /\n/
       columna=0
@@ -312,8 +316,11 @@ while cadsize > puntero
 end
 #Fin del Automata
 
+#Mostrar Errores
 cterrores.getallTokens
 
+puts "---------------------------"
+#Mostrar Tokens
 ct.getallTokens
 
 File.open("Errores.txt",'w') {|f| f.write(cterrores.getallTokensString)}

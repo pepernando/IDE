@@ -1,25 +1,23 @@
-Token Consumido a en 17 9
-Token Consumido if en 18 5
-Token Consumido 3.2 en 20 15
-El token que se esperaba else en 20 20
-Token Consumido 5.0 en 22 12
-Token Consumido y en 23 8
-Token Consumido ( en 28 6
-Token Consumido 6 en 30 7
-Token Consumido x en 31 7
-Token Consumido ; en 31 13
-Token Consumido 36 en 32 7
-El token que se esperaba until en 33 7
-El token que se esperaba ( en 35 3
-Token Consumido == en 35 9
-Token Consumido ) en 35 12
-El token que se esperaba ) en 35 12
-Token Consumido x en 38 12
-Token Consumido ; en 38 22
-Token Consumido 8 en 39 6
-El token que se esperaba 8 en 39 6
-El token que se esperaba % en 39 12
-El token que se esperaba 2 en 39 13
-El token que se esperaba + en 39 14
-El token que se esperaba 5 en 39 15
+El token que se esperaba integer en 2 16
+Token Consumido , en 3 10
+El token que se esperaba , en 3 10
+Token Consumido , en 3 12
+El token que se esperaba , en 3 12
+Token Consumido ; en 3 14
+El token que se esperaba float en 3 15
+Token Consumido , en 4 8
+El token que se esperaba , en 4 8
+Token Consumido , en 4 11
+El token que se esperaba , en 4 11
+Token Consumido ; en 4 14
+Token Consumido if en 19 5
+El token que se esperaba else en 21 21
+Token Consumido 5.0 en 23 12
+Token Consumido x en 32 7
+Token Consumido ; en 32 13
+El token que se esperaba until en 34 7
+El token que se esperaba ( en 36 3
+Token Consumido == en 36 9
+Token Consumido ) en 36 12
+El token que se esperaba ) en 36 12
 No se eperaba el siguiente ;

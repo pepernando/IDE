@@ -5,7 +5,6 @@
  */
 
 
-import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,9 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -707,7 +703,6 @@ public class Ventana extends javax.swing.JFrame {
         String caderr = "";
         guardar();
         
-        
         //Lexico Tokens
         DefaultTableModel model = (DefaultTableModel) jTableLexico.getModel();
         vaciarTablaTokens(model);
@@ -726,9 +721,12 @@ public class Ventana extends javax.swing.JFrame {
                 String sCurrentLine;
                 while ((sCurrentLine = br.readLine()) != null) {
                         String[] lineaAux = sCurrentLine.split("\\|");
-                        model.addRow(new Object[]{lineaAux[0],lineaAux[1],lineaAux[2],lineaAux[3]});
-                        cadaux += sCurrentLine + "\n";
+                        if(lineaAux.length==4){
+                            model.addRow(new Object[]{lineaAux[0],lineaAux[1],lineaAux[2],lineaAux[3]});
+                            cadaux += sCurrentLine + "\n";
+                        }
                 }
+                //guardar();
                 p.waitFor();
                 sintactico();
             } catch (IOException e) {

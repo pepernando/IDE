@@ -9,7 +9,7 @@ class Token
     end
 
     def toString
-      puts "#{@linea} #{@columna} #{@tipo} #{@contenido}"
+      puts "|#{@linea}|#{@columna}|#{@tipo}|#{@contenido}|"
     end
   
     def returnString

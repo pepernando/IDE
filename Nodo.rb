@@ -35,7 +35,8 @@ class Nodo
         tex=""
         if @tipo != nil
           #es un for de 0 a linea - 1
-          if @tipo !='4'
+          if @valor !='noP'
+
             (0..linea - 1).each {
               tex += "\t"
             }

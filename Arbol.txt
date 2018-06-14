@@ -1,12 +1,11 @@
 main
-	integer
-		x
-		y
-		z
-	float
-		a
-		b
-		c
+	write
+		 
+		+
+			%
+				8
+				2
+			5
 	:=
 		suma
 		45
@@ -91,11 +90,27 @@ main
 		>
 			2
 			3
+		bloque
+			:=
+				y
+				+
+					a
+					3
 		else
-			if
-				>
-					4
-					2
+			bloque
+				if
+					>
+						4
+						2
+					bloque
+						:=
+							b
+							3.2
+				:=
+					y
+					+
+						y
+						1
 	:=
 		a
 		+
@@ -112,17 +127,52 @@ main
 			3
 			4
 	do
-		while
-			>
-				x
-				7
-			write
-		while
-			==
+		bloque
+			:=
 				y
-				0
-			read
-				mas
-			write
-				Mi texto
-			write
+				+
+					*
+						+
+							y
+							1
+						2
+					1
+			while
+				>
+					x
+					7
+				bloque
+					:=
+						x
+						+
+							6
+							/
+								*
+									/
+										8
+										9
+									8
+								3
+					write
+					:=
+						mas
+						/
+							36
+							7
+			while
+				==
+					y
+					0
+				bloque
+					read
+						mas
+					write
+						Mi texto
+						x
+					write
+						 
+						+
+							%
+								8
+								2
+							5

@@ -1,4 +1,3 @@
 Errores Lexicos:
 Errores Sintacticos:
 Errores Semanticos:
-Errores Semanticos:

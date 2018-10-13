@@ -1,10 +1,13 @@
 class Nodo
 
     def initialize
-        @hijos =[]
-        @hermano
         @tipo
         @valor
+        @eval #es el resultado 
+        @hijos = []
+
+        @linea = ""
+        @columna = ""
     end
 
     def getTipoNodo
@@ -19,8 +22,8 @@ class Nodo
         @hijos[@hijos.length]=nHijo
     end
 
-    def agFam(herm)
-        @hermano=herm
+    def getHij
+      return @hijos
     end
 
     def setValor(valor)
@@ -31,34 +34,57 @@ class Nodo
         @tipo=tipo
     end
 
-    def texto(linea)
+    def setEval(eval)
+      @eval = eval
+    end
+
+    def getEval
+      return @eval
+    end
+
+    def setLinea(lin,col)
+      @linea = lin
+      @columna = col
+    end
+
+    def getPos
+      return @linea + " " + @columna
+    end
+
+    def getLinea
+      return @linea 
+    end
+
+    def texto(linea,modo)#modo 0 para sintactico modo 1 semantico
         tex=""
         if @tipo != nil
           #es un for de 0 a linea - 1
-          if @valor !='noP'
+          if @valor !='bloque'
 
             (0..linea - 1).each {
               tex += "\t"
             }
 
-            tex +="#{@valor}\n"
+            if(modo==0)
+              tex +="#{@valor}\n"
+            else
+              # tex +=" #{@valor}|#{@tipo}|#{@linea}-#{@columna}|#{@eval}\n"
+              tex +=" #{@valor} (#{@tipo},#{@eval})\n"
+            end
 
             @hijos.each{ |actual|
               if actual != nil
-                tex += "#{actual.texto(linea+1)}"
+                tex += "#{actual.texto(linea+1,modo)}"
               end
             }
           else
             @hijos.each{ |actual|
               if actual != nil
-                tex += "#{actual.texto(linea)}"
+                tex += "#{actual.texto(linea,modo)}"
               end
             }
           end
 
-          if (@hermano != nil)
-              tex +="#{@hermano.texto(linea)}"
-          end
         end
         return tex
     end

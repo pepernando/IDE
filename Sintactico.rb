@@ -1,4 +1,3 @@
-
 require_relative 'Nodo'
 require_relative 'Token'
 require_relative 'ControlToken'
@@ -28,6 +27,9 @@ class Sintactico
                 node = Nodo.new
                 node.setTipoNodo(simbol)
                 node.setValor(@arrayTokens[@punteroToken].returnContenido)
+                #esto es nuevo
+                node.setLinea(@arrayTokens[@punteroToken].returnLinea , @arrayTokens[@punteroToken].returnColumna)
+                #lo de arriba es nuevo we
                 @punteroToken+=1
                 return node
             else
@@ -60,7 +62,7 @@ class Sintactico
     end
 
     def returnArbolTexto
-        return @nodoRaiz.texto(0)
+        return @nodoRaiz.texto(0,0)
     end
 
     def imp
@@ -78,12 +80,12 @@ class Sintactico
             @arrayErrores[@punteroError]="El token esperado era Main #{@auxiliarTexto}"
             @punteroError+=1
             while (@arrayTokens[@punteroToken].returnTipo != "LlaveAbre") do @punteroToken+=1 end
-
         end
         auxil=match("LlaveAbre")
         if auxil == nil
             @punteroError+=1
         end
+
         auxil=listaDeclaracion
         if auxil != nil
             a=0
@@ -151,7 +153,7 @@ class Sintactico
 
     #lista-sentencia -> { sentencia }
     def listaSentencias
-        arraySentencias=[]
+        arraySentencias = []
         banderaAux=0
         while  nodoExiste && @arrayTokens[@punteroToken].returnTipo != "LlaveCierra" do
             auxil=sentencia
@@ -252,15 +254,20 @@ class Sintactico
             if @arrayTokens[@punteroToken].returnTipo =="Incremento"
                 auxArray=Nodo.new
                 auxArray.setTipoNodo("Suma")
-                auxArray.setValor("+")
+                auxArray.setValor("+") #este corresponde al ++ que pasaria a a+
+                #probando esto
+                #auxArray.setLinea(@arrayTokens[@punteroToken].returnLinea,@arrayTokens[@punteroToken].returnColumna-1);
             elsif @arrayTokens[@punteroToken].returnTipo =="Decremento"
                 auxArray=Nodo.new
                 auxArray.setTipoNodo("Resta")
                 auxArray.setValor("-")
             end
             nodoAux=Nodo.new
-            nodoAux.setTipoNodo("TokenInicial")
+            # nodoAux.setTipoNodo("TokenInicial")
+            nodoAux.setTipoNodo("Entero")
             nodoAux.setValor('1')
+            # nodoAux.setLinea(@arrayTokens[@punteroToken].returnLinea,@arrayTokens[@punteroToken].returnColumna);
+
             param=Nodo.new
             param.setTipoNodo(aux.getTipoNodo)
             param.setValor(aux.getValor)
@@ -288,12 +295,16 @@ class Sintactico
         axRep=match("Do")
         aux=bloque
         axRep.agHij(aux)
+
         util=match("Until")
-        axRep.agFam(util)
+        #axRep.agFam(util)
+
         match("ParentesisAbre")
         aux=expresion
         util.agHij(aux)
+
         match("ParentesisCierra")
+
         match("PuntoyComa")
         return axRep
     end
@@ -368,7 +379,6 @@ class Sintactico
             axTer=multOp
             axTer.agHij(auxT)
             aux2=factor
-
             axTer.agHij(aux2)
         end
         return axTer
@@ -443,6 +453,12 @@ class Sintactico
         end
         return axMulop
     end
+
+    def serializar
+        File.open('arbolSint.bin','w+') do |actual|
+            Marshal.dump(@nodoRaiz,actual)
+        end
+    end
 end
 
 #iniciar el programa
@@ -451,11 +467,10 @@ ct.llenarDesdeArchivo("Tokens.txt")
 
 sintactico = Sintactico.new(ct.getArray)
 sintactico.programa
+sintactico.serializar
 
 puts "#{sintactico.returnArbolTexto}"
 puts "Errores \n#{sintactico.returnErrores}"
 
 File.open("Arbol.txt",'w') {|f| f.write(sintactico.returnArbolTexto)}
-File.open("ErroresS.txt",'w') {|f| f.write(sintactico.returnErrores)}
-
-ct.printToken(3)
+File.open("Errores.txt",'a+') {|f| f.write("Errores Sintacticos:\n" + sintactico.returnErrores)}

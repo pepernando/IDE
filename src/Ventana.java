@@ -5,12 +5,15 @@
  */
 
 
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
@@ -19,7 +22,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
+import javax.swing.JViewport;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -38,8 +43,7 @@ public class Ventana extends javax.swing.JFrame {
     private DefaultTreeModel modelo;
     private DefaultMutableTreeNode root;
     private boolean expcolap; //Boleneano para expandir colapsar
-    
-    
+//    private boolean cambios;
     
     public Ventana() throws IOException {
         //comentario de modificacion
@@ -52,17 +56,18 @@ public class Ventana extends javax.swing.JFrame {
         p1 = true;
         b2 = true;
         rowNum = colNum = 0;
-        
+        //jButtonCompilarEjecutar.setEnabled(false);
         ruta = "";
    
         modelo = new DefaultTreeModel(root);
         root = null;
         
-        //agregarellistener();
-        c = new Colorear(jTextPaneCode);
-        c.agregarellistener();
+        c = new Colorear(jTextPaneCode,jScrollPane2);
+        //c.agregarellistener();
+        c.start();
         
-        expcolap = false;        
+        expcolap = false;  
+
     }
 
     /**
@@ -98,12 +103,14 @@ public class Ventana extends javax.swing.JFrame {
         jTextAreaTokens = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTableHash = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
+        jTreeSemantico = new javax.swing.JTree();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea5 = new javax.swing.JTextArea();
         jScrollPane9 = new javax.swing.JScrollPane();
-        jTreeArbol = new javax.swing.JTree();
+        jTreeSintactico = new javax.swing.JTree();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuNuevo = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -203,7 +210,7 @@ public class Ventana extends javax.swing.JFrame {
 
         jLabel1.setText("Linnea: 0 Columna: 0");
 
-        jSplitPane1.setDividerLocation(500);
+        jSplitPane1.setDividerLocation(450);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jTextPaneErrores.setEditable(false);
@@ -227,12 +234,12 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
         jTextPaneCode.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 jTextPaneCodeAncestorAdded(evt);
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
         });
         jTextPaneCode.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -297,11 +304,37 @@ public class Ventana extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Semantico", jScrollPane4);
 
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jScrollPane5.setViewportView(jTextArea4);
+        jTableHash.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        jTabbedPane2.addTab("Hash Table", jScrollPane5);
+            },
+            new String [] {
+                "Pos", "Nombre", "Tipo", "Valor", "Lineas"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableHash.getTableHeader().setReorderingAllowed(false);
+        jScrollPane3.setViewportView(jTableHash);
+
+        jTabbedPane2.addTab("Tabla Hash", jScrollPane3);
+
+        jScrollPane5.setViewportView(jTreeSemantico);
+
+        jTabbedPane2.addTab("Semantico", jScrollPane5);
 
         jTextArea5.setColumns(20);
         jTextArea5.setRows(5);
@@ -309,7 +342,7 @@ public class Ventana extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Condigo Intermedio", jScrollPane6);
 
-        jScrollPane9.setViewportView(jTreeArbol);
+        jScrollPane9.setViewportView(jTreeSintactico);
 
         jTabbedPane2.addTab("Sintactico", jScrollPane9);
 
@@ -422,7 +455,7 @@ public class Ventana extends javax.swing.JFrame {
                     .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 642, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -511,27 +544,27 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jButtonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAbrirActionPerformed
         abrir();
-        try {
-            compilar();
-            //trco.start();
-        } catch (InterruptedException | IOException ex) {
-            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            compilar();
+//            //trco.start();
+//        } catch (InterruptedException | IOException ex) {
+//            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
     }//GEN-LAST:event_jButtonAbrirActionPerformed
 
     private void jButtonEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEjecutarActionPerformed
-        textoaArbol("Arbol.txt");
+        //textoaArbol("Arbol.txt");
+        //textoVisible();
+        c.offsetsVisibles();
     }//GEN-LAST:event_jButtonEjecutarActionPerformed
 
     private void jButtonCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCompilarActionPerformed
-        
         try {
             compilar();
         } catch (InterruptedException | IOException ex) {
             Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }//GEN-LAST:event_jButtonCompilarActionPerformed
 
     private void jTextPaneCodeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextPaneCodeCaretUpdate
@@ -568,10 +601,12 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         if(!expcolap){
-            expandAllNodes(jTreeArbol,0, 0);
+            expandAllNodes(jTreeSintactico,0, 0);
+            expandAllNodes(jTreeSemantico,0, 0);
             expcolap=true;
         }else{
-            contractAllNodes(jTreeArbol,0,0);
+            contractAllNodes(jTreeSintactico,0,0);
+            contractAllNodes(jTreeSemantico,0,0);
             expcolap=false;
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -608,7 +643,7 @@ public class Ventana extends javax.swing.JFrame {
         try {
             JFileChooser chooser = new JFileChooser();
 
-            int returnVal = chooser.showSaveDialog(chooser);
+//            int returnVal = chooser.showSaveDialog(chooser);
 
             ruta = chooser.getSelectedFile().getAbsolutePath();
 
@@ -702,40 +737,43 @@ public class Ventana extends javax.swing.JFrame {
         String cadaux = "";
         String caderr = "";
         guardar();
+        System.out.println("Si guarda");
         
         //Lexico Tokens
         DefaultTableModel model = (DefaultTableModel) jTableLexico.getModel();
         vaciarTablaTokens(model);
+        System.out.println("Table model correcto");
+        
         
         if (!"".equals(jTextPaneCode.getText())) {
-            Process p = null;
             try {
-                p = Runtime.getRuntime().exec("ruby Lexico.rb "+ ruta);
+                
+                ejecutarComando("ruby Lexico.rb "+ ruta);
+                
+                try (BufferedReader br = new BufferedReader(new FileReader("Tokens.txt"))) {
+                    String sCurrentLine;
+                    while ((sCurrentLine = br.readLine()) != null) {
+                            String[] lineaAux = sCurrentLine.split("\\|");
+                            if(lineaAux.length==4){
+                                model.addRow(new Object[]{lineaAux[0],lineaAux[1],lineaAux[2],lineaAux[3]});
+                                cadaux += sCurrentLine + "\n";
+                            }
+                    }
+                } catch (IOException e) {
+                        System.out.println("Error Lectura de Tokens");
+                }
+                guardar();
+                sintactico();
+                semantico();
             } catch (IOException ex) {
                 System.out.println("Error al Ejecutar Sript Lexico");
                 Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
             }
-            p.waitFor();
             //p = Runtime.getRuntime().exec("ruby Lexico.rb "+ ruta);
-            try (BufferedReader br = new BufferedReader(new FileReader("Tokens.txt"))) {
-                String sCurrentLine;
-                while ((sCurrentLine = br.readLine()) != null) {
-                        String[] lineaAux = sCurrentLine.split("\\|");
-                        if(lineaAux.length==4){
-                            model.addRow(new Object[]{lineaAux[0],lineaAux[1],lineaAux[2],lineaAux[3]});
-                            cadaux += sCurrentLine + "\n";
-                        }
-                }
-                //guardar();
-                p.waitFor();
-                sintactico();
-            } catch (IOException e) {
-                    System.out.println("Error Lectura de Tokens");
-            }
+                        
+            caderr = leerArchivo("Errores.txt");
             
-            caderr = "Errores Lexicos \n" + leerArchivo("Errores.txt");
-            
-            caderr += "\nErrores Sintacticos \n" + leerArchivo("ErroresS.txt");
+//            caderr += "\nErrores Sintacticos \n" + leerArchivo("ErroresS.txt");
         }
      
         jTextAreaTokens.setText(cadaux);
@@ -743,11 +781,11 @@ public class Ventana extends javax.swing.JFrame {
     }
     
     @SuppressWarnings("unchecked")
-    private void textoaArbol(String ruta){
+    private void textoaArbol(String ruta,JTree arbol){
         
         root = new DefaultMutableTreeNode("raiz");
         modelo = new DefaultTreeModel(root);
-        jTreeArbol.setModel(modelo);
+        arbol.setModel(modelo);
         try {
                 String cadena;
                 FileReader f = new FileReader(ruta);
@@ -757,7 +795,7 @@ public class Ventana extends javax.swing.JFrame {
                         cola.add(cadena);
                     }
                     cadenilla(cola, root, 0, 0, modelo);
-                    expandAllNodes(jTreeArbol,0,0);
+                    expandAllNodes(arbol,0,0);
                 }
             } catch (IOException e) {
                 //Salida.setText(Salida.getText() + "\n\t" + e.toString());
@@ -831,18 +869,70 @@ public class Ventana extends javax.swing.JFrame {
     
     private void sintactico() throws InterruptedException {
         if (!"".equals(jTextPaneCode.getText())) {
-            Process p = null;
             try {
-                p = Runtime.getRuntime().exec("ruby Sintactico.rb "+ ruta);
-                p.waitFor();
-                textoaArbol("Arbol.txt");
+                //Process p = Runtime.getRuntime().exec("ruby Sintactico.rb "+ ruta);
+                ejecutarComando("ruby Sintactico.rb "+ ruta);
+                //System.out.println("Sitactico se ejecuta");
+                //p.waitFor();
+                textoaArbol("Arbol.txt",jTreeSintactico);
             } catch (IOException ex) {
                 System.out.println("Error al Ejecutar Script Sintactico");
                 Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
             }
         } 
     }
+    
+    private void semantico() throws IOException, InterruptedException{
+        int i=0;
+        DefaultTableModel model = (DefaultTableModel) jTableHash.getModel();
+        vaciarTablaTokens(model);
+        
+        ejecutarComando("ruby Semantico.rb "+ ruta);
+        
+        textoaArbol("Semantico.txt", jTreeSemantico);
+        
+        try (BufferedReader br = new BufferedReader(new FileReader("Hash.txt"))) {
+                    String sCurrentLine;
+                    while ((sCurrentLine = br.readLine()) != null) {
+                            String[] lineaAux = sCurrentLine.split("\\|");
+                            if(lineaAux.length==4){
+                                model.addRow(new Object[]{String.valueOf(i),lineaAux[0],lineaAux[1],lineaAux[2],lineaAux[3]});
+                                i++;
+                            }
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error Lectura de tabla Hash");
+        }
+        
+    }
 
+    private String ejecutarComando(String comando) throws IOException, InterruptedException{
+        String linea;
+        Process p = Runtime.getRuntime().exec(comando);
+        try (BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+            while ((linea = input.readLine()) != null) {
+                linea+=linea;
+            }
+        }
+        p.waitFor();
+        System.out.println(comando + "\n se ejecuto correctamente");
+        return linea;
+    }
+    
+    private void textoVisible() throws BadLocationException{
+        JViewport viewport = jScrollPane2.getViewport();
+        Point startPoint = viewport.getViewPosition();
+        Dimension size = viewport.getExtentSize();
+        Point endPoint = new Point(startPoint.x + size.width, startPoint.y + size.height);
+        
+        int start = jTextPaneCode.viewToModel( startPoint );
+        int end = jTextPaneCode.viewToModel( endPoint );
+        
+        String text = jTextPaneCode.getText(start, end - start);
+        
+        System.out.println("El texto visible es: \n" + text);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAbrir;
     private javax.swing.JButton jButtonCompilar;
@@ -864,6 +954,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuNuevo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
@@ -876,9 +967,9 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTable jTableHash;
     private javax.swing.JTable jTableLexico;
     private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea5;
     private javax.swing.JTextArea jTextAreaTokens;
     private javax.swing.JTextField jTextField2;
@@ -886,6 +977,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JTextPane jTextPaneErrores;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
-    private javax.swing.JTree jTreeArbol;
+    private javax.swing.JTree jTreeSemantico;
+    private javax.swing.JTree jTreeSintactico;
     // End of variables declaration//GEN-END:variables
 }

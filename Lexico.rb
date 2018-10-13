@@ -18,7 +18,6 @@ ARGV.each do|a|
   argumentos << a
 end
 
-
 if argumentos.size == 1
   arch = argumentos[0]
 else
@@ -323,7 +322,7 @@ puts "---------------------------"
 #Mostrar Tokens
 ct.getallTokens
 
-File.open("Errores.txt",'w') {|f| f.write(cterrores.getallTokensString)}
+File.open("Errores.txt",'w') {|f| f.write("Errores Lexicos:\n" + cterrores.getallTokensString)}
 File.open("Tokens.txt",'w') {|f| f.write(ct.getallTokensFormated)}
 
 puts "Todo Correcto Lexico"

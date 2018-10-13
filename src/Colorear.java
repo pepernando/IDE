@@ -8,9 +8,13 @@
 
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -23,7 +27,7 @@ import javax.swing.text.StyledDocument;
  *
  * @author peper
  */
-public class Colorear {
+public class Colorear extends Thread{
     //Estados
     private static final int INICIO = 1;
     private static final int ESPEROIGUAL = 4;
@@ -45,7 +49,7 @@ public class Colorear {
     private static final Color COLOR_COMMENT = Color.LIGHT_GRAY;
     private static final Color COLOR_PRESERVADA = new Color(197,134,192);
     
-     private String cadena;
+    private String cadena;
     private int cadSize;
     private char caracter;
     private final String[] PRESERVADAS = {"main","if","then","else","end","do","while","repeat","until","read","write","float","integer","bool"};
@@ -56,19 +60,40 @@ public class Colorear {
     private int offsetaux;
     private boolean cambios;
     
-   public Colorear(JTextPane tp) {
-        this.cadena = tp.getText();
-        doc = tp.getStyledDocument();
+    //Variables para ver la linea actual
+    private JViewport viewport;
+    private Point startPoint;
+    private Dimension size;
+    private Point endPoint;
+    private int start;
+    private int end;
         
+        //String text = jTextPaneCode.getText(start, end - start);
+    private JTextPane jtp;
+    private JScrollPane sp;
+        
+    
+   public Colorear(JTextPane jtp,JScrollPane sp) {
+        this.jtp = jtp;
+        this.sp = sp;
+
+        this.cadena = jtp.getText();
+        doc = jtp.getStyledDocument();
+
         cadSize = this.cadena.length();
         caracter = ' ';
-        style = tp.addStyle("Estilo", null);
-        
+        style = jtp.addStyle("Estilo", null);
+
         estadoActual = INICIO;
         puntero=0;
         offsetaux = 0;
-        
+
         cambios = false;
+        
+        //guarda los offsets inicial y final del area visible
+        //eso es para solo pintar las frases visibles y mejorar el rendimiento
+        
+//        offsetsVisibles();
      
     }
     
@@ -314,7 +339,298 @@ public class Colorear {
             
         //System.out.println("Estado Final es:" + estadoActual);
     }
+        
+    public void colorearSoloComentarios(){
+        
+        try {
+            cadena = doc.getText(0,doc.getLength());
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Colorear.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cadSize = this.cadena.length();
+        
+        estadoActual = INICIO;
+        puntero = 0;
+        
+        while(cadSize>puntero){
+        
+            caracter = cadena.charAt(puntero);
+            
+            switch(estadoActual){
+                case INICIO: 
+                    switch(caracter){
+                        case '/':
+                            estadoActual = POSIBLECOMENT;
+                            offsetaux = puntero;
+                            break;
+                        case '\"':
+                            estadoActual = CADENA;
+                            offsetaux = puntero;
+                            break;
+                    }
+                break;
+            case CADENA: 
+                if(caracter=='\"'){
+                    setWord(offsetaux,puntero, COLOR_CADENA);
+                    estadoActual = INICIO;
+                }
+                break;
+            case POSIBLECOMENT:
+                    switch (caracter) {
+                    case '*':
+                            estadoActual = MULTIPLECOMENT;
+                        break;
+                    default:
+                            estadoActual = INICIO;
+                            puntero--;
+                        break;    
+                    }
+                break;
+            case MULTIPLECOMENT:
+                    if(caracter=='*'){
+                        estadoActual = POSIBLESALIDA;
+                    }
+                break;
+            case POSIBLESALIDA:
+                    if(caracter=='/'){
+                        setWord(offsetaux, puntero, COLOR_COMMENT);
+                        estadoActual = INICIO;
+                    }else{
+                        estadoActual = MULTIPLECOMENT;
+                    }
+                break;
+            }
+            puntero++;
+        }
+        
+        switch (estadoActual) {
+            case CADENA:
+                System.out.println("Cadena termina en edo incompleto");
+                setWord(offsetaux,doc.getLength()-1,COLOR_CADENA);
+                break;
+            case POSIBLECOMENT:
+            case MULTIPLECOMENT:
+                setWord(offsetaux,doc.getLength()-1,COLOR_COMMENT);
+                break;
+        }
+          
+        //System.out.println("Estado Final es:" + estadoActual);
+    }
     
+    public void colorearloDemas(){
+        
+        try {
+            if(start > end && start!=0 && end!=0){
+                cadena = doc.getText(start,end);
+                cadSize = end;
+            }else{
+                cadena = doc.getText(0,doc.getLength());
+                cadSize = this.cadena.length();
+            }
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Colorear.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        estadoActual = INICIO;
+        puntero = start;
+        
+        while(cadSize>puntero){
+        
+            caracter = cadena.charAt(puntero);
+            
+            switch(estadoActual){
+                case INICIO: 
+                    switch(caracter){
+                        case ' ':
+                        case '\n':
+                        case '\t':
+                        case '\"':
+                            break;
+                        case ')':
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break;
+                        case '(':
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break;
+                        case '{':
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break;
+                        case '}':
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break;
+                        case '*':
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break;
+                        case '%':
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break;
+                        case ',':
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break;
+                        case ';':
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break;
+                        case '+'://Como mas y menos existen solos, lexicamente no hay error y lo pinto
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break; 
+                        case '-':
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            break;  
+                        case '<'://como menor si existe solo lo pinto, pero igual reviso el siguente
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = ESPEROIGUAL;
+                            break;
+                        case '>'://como menor si existe solo lo pinto, pero igual reviso el siguente
+                            setWord(puntero, puntero+1,COLOR_OPERADOR);
+                            estadoActual = ESPEROIGUAL;
+                            break;
+                        case '!'://como menor si existe solo lo pinto, pero igual reviso el siguente
+                            estadoActual = ESPEROIGUAL;
+                            break;
+                        case '='://como menor si existe solo lo pinto, pero igual reviso el siguente
+                            estadoActual = ESPEROIGUAL;
+                            break;
+                        case ':'://como menor si existe solo lo pinto, pero igual reviso el siguente
+                            estadoActual = ESPEROIGUAL;
+                            break;
+                        case '/':
+                            estadoActual = POSIBLECOMENT;
+                            offsetaux = puntero;
+                            break;
+                        default:
+                            if(Character.isDigit(caracter)){
+                                setWord(puntero,puntero+1,COLOR_DIGIT);
+                                estadoActual = DIGITO;
+                            }else if (isCharacter(caracter)){
+                               //setWord(puntero, puntero+1,COLOR_IDENTIF);
+                               estadoActual = INDETIFICADOR;
+                               offsetaux = puntero;
+                            }else{                                    
+                                setWord(puntero, puntero+1,COLOR_ERROR);
+                                //System.out.println("Error en Colorear");
+                                estadoActual = INICIO;
+                            }
+                            break;
+                    }
+                break;
+            case ESPEROIGUAL: 
+                if(caracter=='='){
+                    setWord(puntero-1, puntero+1,COLOR_OPERADOR);
+                }else{
+                    if(cadena.charAt(puntero-1)==':'||cadena.charAt(puntero-1)=='='||cadena.charAt(puntero-1)=='!'){
+                        setWord(puntero-1, puntero,COLOR_ERROR);
+                    }
+                    puntero--;
+                }
+                estadoActual = INICIO;
+                break;
+            case POSIBLECOMENT:
+                    switch (caracter) {
+                    case '/':
+                            estadoActual = INLINECOMENT;
+                        break;
+                    default:
+                            setWord(puntero-1,puntero, COLOR_OPERADOR);
+                            estadoActual = INICIO;
+                            puntero--;
+                        break;    
+                    }
+                break;
+            case INLINECOMENT:
+                    if(caracter=='\n'){
+                        setWord(offsetaux, puntero-1,COLOR_COMMENT);
+                        estadoActual = INICIO;
+                    }
+                break;
+            case DIGITO:
+                    if(caracter=='.'){
+                        estadoActual = POSIBLEDECIMAL;
+                        offsetaux = puntero;
+                    } else {
+                        puntero--;
+                        estadoActual = INICIO;
+                    }
+                break;
+            case POSIBLEDECIMAL:
+                    if(!Character.isDigit(caracter)){
+                        setWord(offsetaux,offsetaux+1,COLOR_ERROR);
+                        estadoActual = INICIO;
+                    }else{
+                        estadoActual = DECIMAL;
+                    }
+                break;
+            case DECIMAL:
+                    if(!Character.isDigit(caracter)){
+                        estadoActual = INICIO;
+                        puntero--;
+                    }
+                break;
+            case INDETIFICADOR:
+                if(!isCharacter(caracter) && caracter!='_' && !Character.isDigit(caracter)){
+                        
+                    String wordaux = cadena.substring(offsetaux, puntero);
+                    boolean bandaux = false;
+                        
+                    for (String PRESERVADAS1 : PRESERVADAS) {
+                        if (PRESERVADAS1.equals(wordaux)) {
+                            setWord(offsetaux, puntero, COLOR_PRESERVADA);
+                            bandaux = true;
+                            break;
+                        }
+                    }
+                    
+                    if(bandaux==false){
+                        setWord(offsetaux,puntero, COLOR_IDENTIF);
+                    }
+                         
+                    puntero--;
+                    estadoActual=INICIO;
+                }
+                break;
+            }
+            
+            puntero++;
+        }     
+        
+        switch (estadoActual) {
+            case POSIBLECOMENT:
+            case INLINECOMENT:
+                setWord(offsetaux,doc.getLength()-1,COLOR_COMMENT);
+                break;
+            case POSIBLEDECIMAL:
+            case ESPEROIGUAL:
+                if(cadena.charAt(puntero-1)!='<'&&cadena.charAt(puntero-1)!='>'){
+                    setWord(puntero-1,puntero, COLOR_ERROR);
+                }
+                break;
+            case INDETIFICADOR:
+                    String wordaux = cadena.substring(offsetaux, puntero);
+                    boolean bandaux = false;
+                    for (String PRESERVADAS1 : PRESERVADAS) {
+                        if (PRESERVADAS1.equals(wordaux)) {
+                            setWord(offsetaux, puntero, COLOR_PRESERVADA);
+                            bandaux = true;
+                            break;
+                        }
+                    }
+                    if(bandaux==false){
+                        setWord(offsetaux,puntero, COLOR_IDENTIF);
+                    }
+                break;
+        }
+        //System.out.println("Estado Final es:" + estadoActual);
+    }
+
     public void setWord(int ini, int fin, Color c) {
         StyleConstants.setForeground(style, c);
         if(fin<=doc.getLength()){
@@ -332,10 +648,26 @@ public class Colorear {
     private void RunnableColorear(){
         Runnable resaltar = () -> {
             colorear();
+//            offsetsVisibles();
+//            colorearloDemas();
+//            colorearSoloComentarios();
         };
         SwingUtilities.invokeLater(resaltar);
        
     }
+
+    @Override
+    public void run() {
+        while (true) {            
+            RunnableColorear();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Colorear.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     
     public void agregarellistener(){
         doc.addDocumentListener(new DocumentListener() {
@@ -363,4 +695,17 @@ public class Colorear {
             }
         });
     }
+
+    public void offsetsVisibles() {
+        viewport = sp.getViewport();
+        startPoint = viewport.getViewPosition();
+        size = viewport.getExtentSize();
+        endPoint = new Point(startPoint.x + size.width, startPoint.y + size.height);
+        
+        start = jtp.viewToModel( startPoint );
+        end = jtp.viewToModel( endPoint );
+        
+        System.out.println("Offset ini " + start + " Offeset end " + end);
+    }
+    
 }

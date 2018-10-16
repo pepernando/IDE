@@ -4,15 +4,20 @@ require_relative 'TablaHash'
 class Semantico
 
     def initialize
+        #esta puede ser reemplazada por la tabla hash
         @arrayExisten = []
         @arrayErrores = ""
+        #la tabla
         @ht = HashTable.new
+        #el arbol
         @nodoRaiz = Nodo.new
+        #lectura del arbol usando serializacion
         File.open('arbolSint.bin') do |act|
             @nodoRaiz = Marshal.load(act)
         end
     end
 
+    #para saber si un nodo es valido
     def valido(nodo)
         if(nodo!=nil)
             return true 
@@ -26,6 +31,8 @@ class Semantico
         obj.to_f.to_s == obj.to_s || obj.to_i.to_s == obj.to_s
     end
 
+    #funcion temporal para inizializar hijos nulos en las operaciones
+    # ya que si se le llama a su hijo 0 o 1 lanzará un error 
     def emergencia(nodo)
         if(valido(nodo))
             nodo.getHij.each{|actual|
@@ -45,22 +52,21 @@ class Semantico
         end
     end
 
-    def posBueno(nodo)
-        if(valido(nodo))
-            
-            case nodo.getTipoNodo
-                when 'Integer','Float','Bool'
-                    if(@ht.existe(nodo.getValor))#si el nodo existe en la tabla es un identificador valido
-                        if(nodo.getEval=="null")
-                            puts "error en la variable #{nodo.getValor} en #{nodo.getPos}"
-                        end 
-                    end
-            end
-            nodo.getHij.each{|act|
-                posBueno(nodo)
-            }
-        end
-    end
+    # def posBueno(nodo)
+    #     if(valido(nodo))
+    #         case nodo.getTipoNodo
+    #             when 'Integer','Float','Bool'
+    #                 if(@ht.existe(nodo.getValor))#si el nodo existe en la tabla es un identificador valido
+    #                     if(nodo.getEval=="null")
+    #                         puts "error en la variable #{nodo.getValor} en #{nodo.getPos}"
+    #                     end 
+    #                 end
+    #         end
+    #         nodo.getHij.each{|act|
+    #             posBueno(nodo)
+    #         }
+    #     end
+    # end
 
     #revisar si sus dos hijos son numericos , si no lo son se le asignara el valor no numerico
     #aqui se contruye la tabla hash y se heredan los tipos a los atributos
@@ -113,8 +119,7 @@ class Semantico
         end
     end
 
-    #en vez de esta funcion otra funcion que en cada nodo verifique si sus hijos son compartibles
-    #asi se le asignara a este un tipo de dato o un error y recibira un nodo como parametro
+    #funcion para comparar operaciones -*/=%
     def evalOp(a,b)
         if (a=="Integer" && b=="Float") 
             return "Float"
@@ -127,6 +132,7 @@ class Semantico
         end
     end
 
+    #funcion para comparar relaciones <><=>===
     def evalComp(a,b)
         if (a=="Integer" && b=="Float") 
             return "Bool"
@@ -296,8 +302,7 @@ class Semantico
             end   
             if(band)
                 if( evalNull(nodo.getHij[0].getEval,nodo.getHij[1].getEval) )
-                    nodo.setEval("null")
-                    
+                    nodo.setEval("null")  
                 end
             end
         end
@@ -306,12 +311,15 @@ class Semantico
     def analizar
         emergencia(@nodoRaiz)
 
+        #verifica si existen o los nodos reedeclarados; 
         recorridoExisten(@nodoRaiz)
 
+        #evalua las operaciones y comparaciones 
         recorridoEvaluar(@nodoRaiz)
-
+        #evalua los tipo
         preOr(@nodoRaiz)
 
+        #Recorrido Evaluar y recorrido preOr podrian estar en una misma funcion para un mejor manejo
 
         File.open("Semantico.txt",'w') {|f| f.write( @nodoRaiz.texto(0,1) )}
         File.open("Errores.txt",'a+') {|f| f.write("Errores Semanticos:\n" + @arrayErrores )}

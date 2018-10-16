@@ -32,7 +32,7 @@ class Semantico
                 emergencia(actual)
             }
             case(nodo.getTipoNodo)
-                when "Suma","Resta","Multiplicacion","Division","Residuo","Mayor","Menor","MayorIgual","MenorIgual","Comparacion","DiferenteDe","Asignacion"
+                when "Suma","Resta","Multiplicacion","Division","Residuo","Mayor","Menor","MayorIgual","MenorIgual","Comparacion","DiferenteDe"
                     if( nodo.getHij[0]==nil || nodo.getHij[1]==nil )
                         a = Nodo.new
                         nodo.getHij.pop
@@ -42,6 +42,23 @@ class Semantico
                         File.open("Errores.txt",'a+') {|f| f.write("Token inesperado en #{nodo.getPos}\n")}
                     end
             end
+        end
+    end
+
+    def posBueno(nodo)
+        if(valido(nodo))
+            
+            case nodo.getTipoNodo
+                when 'Integer','Float','Bool'
+                    if(@ht.existe(nodo.getValor))#si el nodo existe en la tabla es un identificador valido
+                        if(nodo.getEval=="null")
+                            puts "error en la variable #{nodo.getValor} en #{nodo.getPos}"
+                        end 
+                    end
+            end
+            nodo.getHij.each{|act|
+                posBueno(nodo)
+            }
         end
     end
 
@@ -61,15 +78,17 @@ class Semantico
                                 actual.setTipoNodo('Bool')
                         end
                         #al crear, cada hijo es nulo por defecto
-                        # actual.setEval("null")
+                        actual.setEval("null")
                         if(@arrayExisten.include? actual.getValor)
                             @arrayErrores+="la variable #{actual.getValor} ya habia sido declarada #{actual.getPos}\n"
                             actual.setTipoNodo("Error")
                         # end
                         else
-                            @arrayExisten.push(actual.getValor)
-                            @ht.add(actual)
-                            @ht.addLine( actual.getValor , actual.getLinea)
+                            if(actual.getValor!=nil)
+                                @arrayExisten.push(actual.getValor)
+                                @ht.add(actual)
+                                @ht.addLine( actual.getValor , actual.getLinea)
+                            end        
                         end
                     }
                 when 'Identificador'
@@ -78,8 +97,7 @@ class Semantico
                         nodo.setEval(nodo.setTipoNodo("Error"))
                     else
                         @ht.addLine( nodo.getValor , nodo.getLinea)
-                        nodo.setTipoNodo( @ht.solicitaTipo( nodo.getValor) )
-                        
+                        nodo.setTipoNodo( @ht.solicitaTipo( nodo.getValor) )                    
                     end
                 when "Entero","Decimal"
                     nodo.setEval(nodo.getValor)
@@ -121,6 +139,14 @@ class Semantico
         end
     end
 
+    def evalNull(a,b)
+        if (a=="null" || b=="null") 
+            return true
+        else
+            return false
+        end
+    end
+
     def preOr(nodo)
         if(valido(nodo))
             nodo.getHij.each{|actual|
@@ -135,7 +161,12 @@ class Semantico
                     a = nodo.getHij[0].getTipoNodo
                     b = nodo.getHij[1].getTipoNodo
                     nodo.setTipoNodo(evalComp(a,b))
+ 
                 when "If","While"
+                    if(nodo.getHij[0].getEval=='null')
+                        @arrayErrores+= "Error en #{nodo.getHij[0].getPos} variable no inicializada\n"
+                        #posBueno(nodo.getHij[0])
+                    end
                     if(nodo.getHij[0].getEval == '0' || nodo.getHij[0].getEval == '1')
                         nodo.setTipoNodo("Bool")
                         if(nodo.getHij[0].getEval == '0')
@@ -143,14 +174,47 @@ class Semantico
                         else
                             nodo.setEval('1')
                         end
-                    else
-                        nodo.setTipoNodo("Error")
-                        @arrayErrores+="Tipos incompatibles #{nodo.getPos}\n"
                     end
                 when "Do"
                     #menos uno se utilia para indicar en ultimo elemento del array
+                    if(nodo.getHij[-1].getEval=='null')
+                        @arrayErrores+= "Error en #{nodo.getHij[-1].getPos} variable no inicializada\n"
+                        #posBueno(nodo.getHij[-1])
+                    end
                     nodo.setTipoNodo(nodo.getHij[-1].getTipoNodo)            
-                    nodo.setEval(nodo.getHij[-1].getEval)     
+                    nodo.setEval(nodo.getHij[-1].getEval)    
+                when "Asignacion"
+                    if(nodo.getHij[0].getEval=='null')
+                        @arrayErrores+= "Error en #{nodo.getHij[0].getPos} variable no inicializada\n"
+                        #posBueno(nodo.getHij[0])
+                    end
+                    a = nodo.getHij[0].getTipoNodo
+                    b = nodo.getHij[1].getTipoNodo
+                    if(a==b)
+                        nodo.setTipoNodo(a)
+                    elsif (a=="Float" && b=="Integer")
+                        nodo.setTipoNodo("Float")
+                    elsif(a=='Bool')
+                        if( nodo.getHij[1].getValor.to_i==0|| nodo.getHij[1].getValor.to_i==1)
+                            nodo.setTipoNodo("Bool")
+                        else
+                            nodo.setTipoNodo("Error")
+                            @arrayErrores+="Tipos incorpatibles a la variable #{nodo.getHij[0].getValor} en #{nodo.getHij[0].getPos}\n"                        
+                        end
+                    else
+                        nodo.setTipoNodo("Error")
+                        @arrayErrores+="Tipos incorpatibles a la variable #{nodo.getHij[0].getValor} en #{nodo.getHij[0].getPos}\n"
+                    end
+            end
+            if(nodo.getTipoNodo=="Integer")
+                if(@ht.existe(nodo.getValor))
+                    if(@ht.lineaIni(nodo.getValor).to_i != nodo.getLinea.to_i)
+                        nodo.setEval(nodo.getEval.to_i)
+                        @ht.actualizaValor(nodo.getValor,nodo.getEval)                    
+                    end
+                else
+                    nodo.setEval(nodo.getEval.to_i)
+                end
             end
         end
     end
@@ -161,6 +225,7 @@ class Semantico
                 recorridoEvaluar(actual) 
             }
             auxi = ""
+            band = true
             case(nodo.getTipoNodo)
             when "Suma"
                 nodo.setEval( nodo.getHij[0].getEval.to_f + nodo.getHij[1].getEval.to_f )
@@ -171,47 +236,47 @@ class Semantico
             when "Division"
                 nodo.setEval( nodo.getHij[0].getEval.to_f / nodo.getHij[1].getEval.to_f )
             when "Residuo"
-                nodo.setEval( nodo.getHij[0].getEval.to_f % nodo.getHij[1].getEval.to_f )
+                nodo.setEval( nodo.getHij[0].getEval.to_i % nodo.getHij[1].getEval.to_i )
             when "Mayor"
                 if (nodo.getHij[0].getEval.to_f > nodo.getHij[1].getEval.to_f)
-                    auxi = "true"
+                    auxi = "1"
                 else
-                    auxi = "false"
+                    auxi = "0"
                 end
                 nodo.setEval( auxi )
             when "Menor"
                 if (nodo.getHij[0].getEval.to_f < nodo.getHij[1].getEval.to_f)
-                    auxi = "true"
+                    auxi = "1"
                 else
-                    auxi = "false"
+                    auxi = "0"
                 end
                 nodo.setEval( auxi )
             when "MayorIgual"            
                 if (nodo.getHij[0].getEval.to_f >= nodo.getHij[1].getEval.to_f)
-                    auxi = "true"
+                    auxi = "1"
                 else
-                    auxi = "false"
+                    auxi = "0"
                 end
                 nodo.setEval( auxi )
             when "MenorIgual"            
                 if (nodo.getHij[0].getEval.to_f <= nodo.getHij[1].getEval.to_f)
-                    auxi = "true"
+                    auxi = "1"
                 else
-                    auxi = "false"
+                    auxi = "0"
                 end
                 nodo.setEval( auxi )
             when "Comparacion"            
                 if (nodo.getHij[0].getEval.to_f == nodo.getHij[1].getEval.to_f)
-                    auxi = "true"
+                    auxi = "1"
                 else
-                    auxi = "false"
+                    auxi = "0"
                 end
                 nodo.setEval( auxi )
             when "DiferenteDe"
                 if (nodo.getHij[0].getEval.to_f != nodo.getHij[1].getEval.to_f)
-                    auxi = "true"
+                    auxi = "1"
                 else
-                    auxi = "false"
+                    auxi = "0"
                 end
                 nodo.setEval( auxi )
             when "Asignacion"
@@ -220,32 +285,42 @@ class Semantico
                 nodo.setEval(nodo.getHij[1].getEval)
             when "Float","Integer","Bool" #como expresion fue reemplazado por el tipo
                 if(@ht.existe(nodo.getValor))#si el nodo existe en la tabla es un identificador valido
-                    nodo.setEval( @ht.getValExp(nodo.getValor) )
+                    nodo.setEval( @ht.getValExp(nodo.getValor) )   
                 end
+                band = false
             when "Read"
                 @ht.actualizaValor(nodo.getHij[0].getValor ,"?")
+                band = false
+            else
+                band = false
+            end   
+            if(band)
+                if( evalNull(nodo.getHij[0].getEval,nodo.getHij[1].getEval) )
+                    nodo.setEval("null")
+                    
+                end
             end
         end
     end
 
     def analizar
         emergencia(@nodoRaiz)
+
         recorridoExisten(@nodoRaiz)
 
         recorridoEvaluar(@nodoRaiz)
 
         preOr(@nodoRaiz)
 
+
         File.open("Semantico.txt",'w') {|f| f.write( @nodoRaiz.texto(0,1) )}
         File.open("Errores.txt",'a+') {|f| f.write("Errores Semanticos:\n" + @arrayErrores )}
         
         @ht.hashaTexto
+        @ht.mostrar
     end
 
 end
 
 sint = Semantico.new
 sint.analizar
-
-asd = "esta es una cadena ".to_f
-puts "cad #{asd}"

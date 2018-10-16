@@ -4,7 +4,8 @@ class Row
         @valor = nodo.getValor.to_s
         @eval = nodo.getEval
         # @linea = nodo.getLinea
-        @linea = ""
+        @linea = []
+        @nlineas = 0
     end
 
     def getTipo
@@ -20,11 +21,20 @@ class Row
     end
 
     def getLinea
-        return @linea
+        aux = ""
+        @linea.each{|act|
+            aux += act.to_s 
+            aux += " "
+        }
+        return aux
     end
 
-    def setLinea(aux)
-        @linea = aux
+    def getlineaIni
+        return @linea[0]
+    end
+
+    def pushLinea(aux)
+        @linea.push(aux.to_i)
     end
 
     def getValor
@@ -43,9 +53,9 @@ class HashTable
 
     def addLine(identificador,linea)
         @rows.each{ |act|
-            if (linea!=0)#esta se usa para el caso c++ ya que aqui no se tinene una linea
+            if (linea.to_i!=0)#esta se usa para el caso c++ ya que aqui no se tinene una linea
                 if (act.getValor == identificador)
-                    act.setLinea( act.getLinea.to_s+ linea.to_s + " ") 
+                    act.pushLinea( linea.to_i ) 
                 end
             end
         }
@@ -78,7 +88,8 @@ class HashTable
         if(band)
             return aux
         else
-            return "La variable que buscas no existe"
+            puts "La variable que buscas no existe"
+            return " "
         end
     end
 
@@ -108,5 +119,15 @@ class HashTable
                 return act.getEval 
             end
         }
+    end
+
+    def lineaIni(nombre) #busca en la tala el tipo de dato para ver si no se le asigna 
+        @rows.each{ |act|
+            if (act.getValor == nombre)
+                return act.getlineaIni
+                break;
+            end
+        }
+        return 0
     end
 end

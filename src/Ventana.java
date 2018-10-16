@@ -101,8 +101,6 @@ public class Ventana extends javax.swing.JFrame {
         jTableLexico = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaTokens = new javax.swing.JTextArea();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTableHash = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -297,12 +295,6 @@ public class Ventana extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextAreaTokens);
 
         jTabbedPane2.addTab("Lexico", jScrollPane1);
-
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane4.setViewportView(jTextArea3);
-
-        jTabbedPane2.addTab("Semantico", jScrollPane4);
 
         jTableHash.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -896,6 +888,13 @@ public class Ventana extends javax.swing.JFrame {
                     while ((sCurrentLine = br.readLine()) != null) {
                             String[] lineaAux = sCurrentLine.split("\\|");
                             if(lineaAux.length==4){
+                                if("Bool".equals(lineaAux[1]) ){
+                                    if("1".equals(lineaAux[2])){
+                                        lineaAux[2]="true";
+                                    }else{
+                                        lineaAux[2]="false";
+                                    }
+                                }
                                 model.addRow(new Object[]{String.valueOf(i),lineaAux[0],lineaAux[1],lineaAux[2],lineaAux[3]});
                                 i++;
                             }
@@ -955,7 +954,6 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
@@ -969,7 +967,6 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTableHash;
     private javax.swing.JTable jTableLexico;
-    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea5;
     private javax.swing.JTextArea jTextAreaTokens;
     private javax.swing.JTextField jTextField2;

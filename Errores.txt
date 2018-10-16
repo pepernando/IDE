@@ -1,3 +1,10 @@
 Errores Lexicos:
 Errores Sintacticos:
 Errores Semanticos:
+la variable suma no se declaro 6 2
+la variable mas no se declaro 36 7
+la variable mas no se declaro 41 12
+Tipos incompatibles 21 11
+Tipos incompatibles 18 2
+Tipos incompatibles 33 6
+Tipos incompatibles 40 3

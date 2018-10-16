@@ -26,25 +26,6 @@ class Semantico
         obj.to_f.to_s == obj.to_s || obj.to_i.to_s == obj.to_s
     end
 
-    def emergencia(nodo)
-        if(valido(nodo))
-            nodo.getHij.each{|actual|
-                emergencia(actual)
-            }
-            case(nodo.getTipoNodo)
-                when "Suma","Resta","Multiplicacion","Division","Residuo","Mayor","Menor","MayorIgual","MenorIgual","Comparacion","DiferenteDe","Asignacion"
-                    if( nodo.getHij[0]==nil || nodo.getHij[1]==nil )
-                        a = Nodo.new
-                        nodo.getHij.pop
-                        nodo.agHij(a)
-                        puts "#{nodo.getHij[0].getEval}"
-                        puts "#{nodo.getHij[1].getEval}"
-                        File.open("Errores.txt",'a+') {|f| f.write("Token inesperado en #{nodo.getPos}\n")}
-                    end
-            end
-        end
-    end
-
     #revisar si sus dos hijos son numericos , si no lo son se le asignara el valor no numerico
     #aqui se contruye la tabla hash y se heredan los tipos a los atributos
     def recorridoExisten(nodo) 
@@ -63,7 +44,7 @@ class Semantico
                         #al crear, cada hijo es nulo por defecto
                         # actual.setEval("null")
                         if(@arrayExisten.include? actual.getValor)
-                            @arrayErrores+="la variable #{actual.getValor} ya habia sido declarada #{actual.getPos}\n"
+                            @arrayErrores+="la variable #{actual.getValor} ya habia sido declarada\n"
                             actual.setTipoNodo("Error")
                         # end
                         else
@@ -74,7 +55,7 @@ class Semantico
                     }
                 when 'Identificador'
                     if(!@arrayExisten.include? nodo.getValor)
-                        @arrayErrores+="la variable #{nodo.getValor} no se declaro #{nodo.getPos}\n"
+                        @arrayErrores+="la variable #{nodo.getValor} no se declaro \n"
                         nodo.setEval(nodo.setTipoNodo("Error"))
                     else
                         @ht.addLine( nodo.getValor , nodo.getLinea)
@@ -145,7 +126,7 @@ class Semantico
                         end
                     else
                         nodo.setTipoNodo("Error")
-                        @arrayErrores+="Tipos incompatibles #{nodo.getPos}\n"
+                        @arrayErrores+="Tipos incompatibles #{nodo.getpos}"
                     end
                 when "Do"
                     #menos uno se utilia para indicar en ultimo elemento del array
@@ -163,7 +144,12 @@ class Semantico
             auxi = ""
             case(nodo.getTipoNodo)
             when "Suma"
-                nodo.setEval( nodo.getHij[0].getEval.to_f + nodo.getHij[1].getEval.to_f )
+                # puts "#{nodo.getHij[0].getEval.to_f} "
+                puts "#{nodo.getHij.size} "
+                nodo.getHij.each{|actual|
+                    puts "#{actual.getEval}" 
+                }
+                # nodo.setEval( nodo.getHij[0].getEval.to_f + nodo.getHij[1].getEval.to_f )
             when "Resta"
                 nodo.setEval( nodo.getHij[0].getEval.to_f - nodo.getHij[1].getEval.to_f )
             when "Multiplicacion"
@@ -222,19 +208,16 @@ class Semantico
                 if(@ht.existe(nodo.getValor))#si el nodo existe en la tabla es un identificador valido
                     nodo.setEval( @ht.getValExp(nodo.getValor) )
                 end
-            when "Read"
-                @ht.actualizaValor(nodo.getHij[0].getValor ,"?")
             end
         end
     end
 
     def analizar
-        emergencia(@nodoRaiz)
         recorridoExisten(@nodoRaiz)
 
         recorridoEvaluar(@nodoRaiz)
 
-        preOr(@nodoRaiz)
+        # preOr(@nodoRaiz)
 
         File.open("Semantico.txt",'w') {|f| f.write( @nodoRaiz.texto(0,1) )}
         File.open("Errores.txt",'a+') {|f| f.write("Errores Semanticos:\n" + @arrayErrores )}

@@ -1,10 +1,7 @@
-x|Integer| |2  
-y|Integer|11.0 |2 10 11  
-z|Integer| |2  
-a|Float|10 |3 6 7 10  
-b|Float| |3  
-c|Float|4.0 |3 8 10  
-m|Float| |3  
-s|Float| |3  
-d|Float| |3  
-zo|Bool|true |5 9 11  
+x|Integer|8.37037037037037 |2 7 8 13 30 33 34 35 42 45  
+y|Integer|131.66666666666666 |2 9 10 11 11 14 19 26 26 32 32 38 40  
+z|Integer|64.0 |2 10 15  
+a|Float|61.33333333333333 |3 12 19 28   
+b|Float|5.0 |3 22 24  
+c|Float|-1.0 |3 29   
+band|Bool|true |4 5  

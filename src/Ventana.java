@@ -67,7 +67,7 @@ public class Ventana extends javax.swing.JFrame {
         c.start();
         
         expcolap = false;  
-
+        
     }
 
     /**

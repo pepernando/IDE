@@ -266,8 +266,7 @@ class Sintactico
             # nodoAux.setTipoNodo("TokenInicial")
             nodoAux.setTipoNodo("Entero")
             nodoAux.setValor('1')
-            # nodoAux.setLinea(@arrayTokens[@punteroToken].returnLinea,@arrayTokens[@punteroToken].returnColumna);
-
+            # nodoAux.setLinea(@arrayTokens[@punteroToken].returnLinea,@arrayTokens[@punteroToken].returnColumna)
             param=Nodo.new
             param.setTipoNodo(aux.getTipoNodo)
             param.setValor(aux.getValor)
@@ -301,7 +300,8 @@ class Sintactico
 
         match("ParentesisAbre")
         aux=expresion
-        util.agHij(aux)
+        # util.agHij(auxx)
+        axRep.agHij(aux)
 
         match("ParentesisCierra")
 
@@ -352,6 +352,7 @@ class Sintactico
             auEx=axExp
             axExp=aux
             axExp.agHij(auEx)
+            
             aux=expresionSimple
             axExp.agHij(aux)
         end
@@ -473,4 +474,4 @@ puts "#{sintactico.returnArbolTexto}"
 puts "Errores \n#{sintactico.returnErrores}"
 
 File.open("Arbol.txt",'w') {|f| f.write(sintactico.returnArbolTexto)}
-File.open("Errores.txt",'a+') {|f| f.write("Errores Sintacticos:\n" + sintactico.returnErrores)}
+File.open("Errores.txt",'a+') {|f| f.write( "Errores Sintacticos:\n" + sintactico.returnErrores ) }

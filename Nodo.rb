@@ -1,9 +1,9 @@
 class Nodo
 
     def initialize
-        @tipo
-        @valor
-        @eval #es el resultado 
+        @tipo  
+        @valor 
+        @eval = "" #es el resultado 
         @hijos = []
 
         @linea = ""
@@ -68,8 +68,17 @@ class Nodo
             if(modo==0)
               tex +="#{@valor}\n"
             else
-              # tex +=" #{@valor}|#{@tipo}|#{@linea}-#{@columna}|#{@eval}\n"
-              tex +=" #{@valor} (#{@tipo},#{@eval})\n"
+              #Cambia en el texto del arbol el texto a true o false para mejor entendimiento
+              # if ( (@eval=='0'||@eval=='1') && @tipo=='Bool')
+              # if ( @tipo=='Bool')
+              #   if(@eval=='1')
+              #     tex +=" #{@valor} (#{@tipo}),true)\n"
+              #   else
+              #     tex +=" #{@valor} (#{@tipo},false)\n"
+              #   end
+              # else
+                tex +=" #{@valor} (#{@tipo},#{@eval})\n"
+              # end
             end
 
             @hijos.each{ |actual|
@@ -89,4 +98,3 @@ class Nodo
         return tex
     end
   end
-

@@ -7,6 +7,7 @@ class Semantico
         #esta puede ser reemplazada por la tabla hash
         @arrayExisten = []
         @arrayErrores = ""
+        @arrPrueba = []
         #la tabla
         @ht = HashTable.new
         #el arbol
@@ -87,6 +88,8 @@ class Semantico
                         actual.setEval("null")
                         if(@arrayExisten.include? actual.getValor)
                             @arrayErrores+="la variable #{actual.getValor} ya habia sido declarada #{actual.getPos}\n"
+                            @arrPrueba.push("la variable #{actual.getValor} ya habia sido declarada ")
+                            @arrPrueba.push(actual.getPos)
                             actual.setTipoNodo("Error")
                         # end
                         else
@@ -100,6 +103,8 @@ class Semantico
                 when 'Identificador'
                     if(!@arrayExisten.include? nodo.getValor)
                         @arrayErrores+="la variable #{nodo.getValor} no se declaro #{nodo.getPos}\n"
+                        @arrPrueba.push("la variable #{nodo.getValor} no se declaro ")
+                        @arrPrueba.push(nodo.getPos)
                         nodo.setEval(nodo.setTipoNodo("Error"))
                     else
                         @ht.addLine( nodo.getValor , nodo.getLinea)
@@ -163,6 +168,10 @@ class Semantico
                     a = nodo.getHij[0].getTipoNodo
                     b = nodo.getHij[1].getTipoNodo
                     nodo.setTipoNodo(evalOp(a,b))
+                when "Write"
+                    # a = nodo.getHij[1].getHij[0].getHij[0].getTipoNodo
+                    # b = nodo.getHij[1].getHij[0].getHij[1]getTipoNodo
+                    # nodo.setTipoNodo(evalOp(a,b))
                 when "Mayor","Menor","MayorIgual","MenorIgual","Comparacion","DiferenteDe"
                     a = nodo.getHij[0].getTipoNodo
                     b = nodo.getHij[1].getTipoNodo
@@ -185,6 +194,7 @@ class Semantico
                     #menos uno se utilia para indicar en ultimo elemento del array
                     if(nodo.getHij[-1].getEval=='null')
                         @arrayErrores+= "Error en #{nodo.getHij[-1].getPos} variable no inicializada\n"
+                        
                         #posBueno(nodo.getHij[-1])
                     end
                     nodo.setTipoNodo(nodo.getHij[-1].getTipoNodo)            
@@ -205,21 +215,38 @@ class Semantico
                             nodo.setTipoNodo("Bool")
                         else
                             nodo.setTipoNodo("Error")
-                            @arrayErrores+="Tipos incorpatibles a la variable #{nodo.getHij[0].getValor} en #{nodo.getHij[0].getPos}\n"                        
+                            @arrayErrores+="Tipos incorpatibles a la variable #{nodo.getHij[0].getValor} en #{nodo.getHij[0].getPos}\n"  
+                            @arrPrueba.push("Tipos incorpatibles a la variable #{nodo.getHij[0].getValor} en ")
+                            @arrPrueba.push(nodo.getHij[0].getPos)                      
                         end
                     else
                         nodo.setTipoNodo("Error")
                         @arrayErrores+="Tipos incorpatibles a la variable #{nodo.getHij[0].getValor} en #{nodo.getHij[0].getPos}\n"
+                        @arrPrueba.push("Tipos incorpatibles a la variable #{nodo.getHij[0].getValor} en ",nodo.getHij[0].getPos)    
                     end
             end
-            if(nodo.getTipoNodo=="Integer")
+            if(nodo.getTipoNodo=="Integer" && nodo.getEval !='null')
                 if(@ht.existe(nodo.getValor))
                     if(@ht.lineaIni(nodo.getValor).to_i != nodo.getLinea.to_i)
                         nodo.setEval(nodo.getEval.to_i)
                         @ht.actualizaValor(nodo.getValor,nodo.getEval)                    
                     end
                 else
-                    nodo.setEval(nodo.getEval.to_i)
+                    if(nodo.getEval!='')
+                        nodo.setEval(nodo.getEval.to_i)
+                    end
+                end
+            end
+            if(nodo.getTipoNodo=="Float" && nodo.getEval !='null')
+                if(@ht.existe(nodo.getValor))
+                    if(@ht.lineaIni(nodo.getValor).to_i != nodo.getLinea.to_i)
+                        nodo.setEval(nodo.getEval.to_f)
+                        @ht.actualizaValor(nodo.getValor,nodo.getEval)                    
+                    end
+                else
+                    if(nodo.getEval!='')
+                        nodo.setEval(nodo.getEval.to_f)
+                    end
                 end
             end
         end
@@ -234,15 +261,44 @@ class Semantico
             band = true
             case(nodo.getTipoNodo)
             when "Suma"
-                nodo.setEval( nodo.getHij[0].getEval.to_f + nodo.getHij[1].getEval.to_f )
+                a = nodo.getHij[0].getTipoNodo
+                b = nodo.getHij[1].getTipoNodo
+                nodo.setTipoNodo(evalOp(a,b))
+                if(evalOp(a,b)=='float')
+                    nodo.setEval( nodo.getHij[0].getEval.to_f + nodo.getHij[1].getEval.to_f )
+                elsif
+                    nodo.setEval( nodo.getHij[0].getEval.to_i + nodo.getHij[1].getEval.to_i )
+                end
             when "Resta"
-                nodo.setEval( nodo.getHij[0].getEval.to_f - nodo.getHij[1].getEval.to_f )
+                a = nodo.getHij[0].getTipoNodo
+                b = nodo.getHij[1].getTipoNodo
+                nodo.setTipoNodo(evalOp(a,b))
+                if(evalOp(a,b)=='float')
+                    nodo.setEval( nodo.getHij[0].getEval.to_f - nodo.getHij[1].getEval.to_f )
+                elsif
+                    nodo.setEval( nodo.getHij[0].getEval.to_i - nodo.getHij[1].getEval.to_i )
+                end
             when "Multiplicacion"
-                nodo.setEval( nodo.getHij[0].getEval.to_f * nodo.getHij[1].getEval.to_f )
+                a = nodo.getHij[0].getTipoNodo
+                b = nodo.getHij[1].getTipoNodo
+                nodo.setTipoNodo(evalOp(a,b))
+                if(evalOp(a,b)=='float')
+                    nodo.setEval( nodo.getHij[0].getEval.to_f * nodo.getHij[1].getEval.to_f )
+                elsif
+                    nodo.setEval( nodo.getHij[0].getEval.to_i * nodo.getHij[1].getEval.to_i )
+                end
             when "Division"
-                nodo.setEval( nodo.getHij[0].getEval.to_f / nodo.getHij[1].getEval.to_f )
+                a = nodo.getHij[0].getTipoNodo
+                b = nodo.getHij[1].getTipoNodo
+                nodo.setTipoNodo(evalOp(a,b))
+                if(evalOp(a,b)=='float')
+                    nodo.setEval( nodo.getHij[0].getEval.to_f / nodo.getHij[1].getEval.to_f )
+                elsif
+                    nodo.setEval( nodo.getHij[0].getEval.to_i / nodo.getHij[1].getEval.to_i )
+                end
             when "Residuo"
                 nodo.setEval( nodo.getHij[0].getEval.to_i % nodo.getHij[1].getEval.to_i )
+                nodo.setTipoNodo("Integer")
             when "Mayor"
                 if (nodo.getHij[0].getEval.to_f > nodo.getHij[1].getEval.to_f)
                     auxi = "1"
@@ -297,6 +353,13 @@ class Semantico
             when "Read"
                 @ht.actualizaValor(nodo.getHij[0].getValor ,"?")
                 band = false
+            when "Write"
+                if(nodo.getHij.size>1)
+                    nodo.setEval(nodo.getHij[0].getValor + nodo.getHij[1].getEval.to_s )
+                else
+                    nodo.setEval(nodo.getHij[0].getValor)
+                end
+                band = false
             else
                 band = false
             end   
@@ -323,6 +386,11 @@ class Semantico
 
         File.open("Semantico.txt",'w') {|f| f.write( @nodoRaiz.texto(0,1) )}
         File.open("Errores.txt",'a+') {|f| f.write("Errores Semanticos:\n" + @arrayErrores )}
+
+        @arrPrueba.sort! { |a, b|  a[1] <=> b[1] }
+        @arrPrueba.each{ |act|
+            puts "#{act[0]} #{act[1]}\n"
+        }
         
         @ht.hashaTexto
         @ht.mostrar

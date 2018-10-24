@@ -1,11 +1,13 @@
 Errores Lexicos:
 Errores Sintacticos:
 Errores Semanticos:
-la variable suma no se declaro 10 2
-la variable mas no se declaro 38 7
-la variable mas no se declaro 43 12
-Tipos incorpatibles a la variable suma en 10 2
-Tipos incorpatibles a la variable x en 11 2
-Tipos incorpatibles a la variable y en 21 11
-Error en 31 2 variable no inicializada
-Tipos incorpatibles a la variable mas en 38 7
+la variable x ya habia sido declarada 2 16
+la variable y ya habia sido declarada 3 16
+la variable z ya habia sido declarada 5 10
+la variable suma no se declaro 14 2
+la variable mas no se declaro 42 7
+la variable mas no se declaro 47 12
+Tipos incorpatibles a la variable suma en 14 2
+Tipos incorpatibles a la variable x en 15 2
+Tipos incorpatibles a la variable y en 25 11
+Tipos incorpatibles a la variable mas en 42 7

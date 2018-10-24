@@ -69,18 +69,16 @@ class Nodo
               tex +="#{@valor}\n"
             else
               #Cambia en el texto del arbol el texto a true o false para mejor entendimiento
-              # if ( (@eval=='0'||@eval=='1') && @tipo=='Bool')
-              
-              # if ( @tipo=='Bool')
-              #   if(@eval=='1')
-              #     tex +="#{@valor} ( #{@tipo}), true )\n"
-              #   else
-              #     tex +="#{@valor} ( #{@tipo}, false )\n"
-              #   end
-              # else
-              #   tex +="#{@valor} (#{@tipo},#{@eval})\n"
-              # end
-              tex +="#{@valor} (#{@tipo},#{@eval})\n"
+              if ( @tipo=='Bool')
+                if(@eval=='1')
+                  tex +="#{@valor} ( #{@tipo}, true )\n"
+                else
+                  tex +="#{@valor} ( #{@tipo}, false )\n"
+                end
+              else
+                tex +="#{@valor} (#{@tipo},#{@eval})\n"
+              end
+              # tex +="#{@valor} (#{@tipo},#{@eval})\n"
             end
 
             @hijos.each{ |actual|
@@ -95,7 +93,6 @@ class Nodo
               end
             }
           end
-
         end
         return tex
     end
